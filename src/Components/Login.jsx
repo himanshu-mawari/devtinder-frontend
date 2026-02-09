@@ -28,6 +28,7 @@ const Login = () => {
     }
   };
 
+
   return (
     <div className="flex justify-center   mt-20 ">
       <div className="card card-border bg-base-200 w-full max-w-md p-2">
