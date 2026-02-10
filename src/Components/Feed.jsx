@@ -1,8 +1,28 @@
+import UserCard from "../components/UserCard";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { useEffect } from "react";
+import { useDispatch , useSelector  } from "react-redux"
+import { addFeed} from "../utils/feedSlice"
 
 const Feed = () => {
-  return (
-    <div>Feed</div>
-  )
-}
+  const dispatch = useDispatch();
+  const feed = useSelector(store => store?.feed)
 
-export default Feed
+  const fetchUserFeed = async () => {
+    const res = await axios.get(BASE_URL + "user/feed",  { withCredentials: true });
+    dispatch(addFeed(res?.data?.data))
+  };
+
+  useEffect(() => {
+    fetchUserFeed();
+  }, []);
+
+  return (
+    <div>
+     {feed && <UserCard feedData={feed[1]} />}
+    </div>
+  );
+};
+
+export default Feed;
