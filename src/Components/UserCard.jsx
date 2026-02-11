@@ -1,6 +1,5 @@
-const UserCard = ({ feedData }) => {
-  const { firstName, bio, age, profilePicture, skills } = feedData;
-  console.log(skills);
+const UserCard = ({ userData }) => {
+  const { firstName, bio, age, profilePicture, skills } = userData;
 
   return (
     <div className="flex justify-center mt-6">

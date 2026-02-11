@@ -22,7 +22,7 @@ const NavBar = () => {
 
   return (
     <div>
-      <div className=" navbar bg-base-200 ">
+      <div className=" navbar bg-base-300  ">
         <div className="flex-1  ml-8">
           <Link to="/" className=" btn btn-ghost text-xl font-semibold">
             🧑🏻‍💻DevTinder
