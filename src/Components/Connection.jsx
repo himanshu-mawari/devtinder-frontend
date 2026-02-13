@@ -51,11 +51,11 @@ const Connections = () => {
           const { firstName, lastName, profilePicture, bio } = data;
           return (
             <div className="flex justify-center mt-3">
-              <div className="flex items-center gap-4 bg-base-200 w-7/12 mx-auto px-8 py-4 rounded-xl cursor-pointer hover:scale-95 hover:bg-base-300 transition">
+              <div className="flex items-center gap-4 bg-base-200 w-7/12 mx-auto px-8 py-3 rounded-xl cursor-pointer hover:scale-95 hover:bg-base-300 transition">
 
                 <img
                   src={profilePicture}
-                  className="w-24 h-24 rounded-full object-cover flex-shrink-0"
+                  className="w-20 h-20 rounded-full object-cover flex-shrink-0"
                 />
 
                 <div className="min-w-0">
@@ -63,7 +63,7 @@ const Connections = () => {
                     {firstName} {lastName}
                   </div>
 
-                  <div className="opacity-70 line-clamp-2">{bio}</div>
+                  <div className="opacity-70 text-sm line-clamp-2">{bio}</div>
                 </div>
               </div>
             </div>

@@ -13,8 +13,9 @@ export const EditProfile = ({ profileData }) => {
   const [profilePicture, setProfilePicture] = useState(
     profileData.profilePicture,
   );
+
   const [bio, setBio] = useState(profileData.bio);
-  const [toast , setToast] = useState(false);
+  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
 
   const saveProfile = async () => {
@@ -24,21 +25,22 @@ export const EditProfile = ({ profileData }) => {
       { withCredentials: true },
     );
     dispatch(addUser(res?.data?.data));
-    setToast(true)
+    setToast(true);
     setTimeout(() => {
-       setToast(false)
-    },2000)
+      setToast(false);
+    }, 2000);
   };
 
-  return (
-    <>
-      <div className="flex justify-center items-start gap-x-16 p-4 mb-12 bg-base-200">
-        <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
-          <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4">
-            Edit Profile
-          </h2>
+  return  (
 
-          <label className="label">
+    <>
+    <div className="flex justify-center items-start gap-x-16 p-4 pb-10 mb-12">
+    <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
+    <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4 pb-2">
+    Edit Profile
+    </h2>
+    
+    <label className="label">
             <span className="label-text text-sm">First Name:</span>
           </label>
           <input
@@ -72,35 +74,26 @@ export const EditProfile = ({ profileData }) => {
             <span className="label-text text-sm">Age:</span>
           </label>
           <input
-            type="text"
+            type="number"
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            className="input input-bordered w-full h-8 text-sm mb-1"
+            className = "input input-bordered w-full h-8 text-sm mb-1"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
 
           <label className="label">
-            <span className="label-text text-sm">Gender:</span>
+            <span className="label-text text-sm ">Gender:</span>
           </label>
-          <div className="dropdown w-full mb-1">
-            <input
-              tabIndex={0}
-              className="input input-bordered w-full h-8 text-sm"
-              placeholder="Select Gender"
-              value={gender}
-              readOnly
-            />
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu p-1 shadow bg-base-100 rounded-box w-full"
-            >
-              <li>
-                <button onClick={() => setGender("Male")}>Male</button>
-              </li>
-              <li>
-                <button onClick={() => setGender("Female")}>Female</button>
-              </li>
-            </ul>
-          </div>
+          <select  className="select" value={gender} onChange={(e) => setGender(e.target.value)}>
+            <option disabled={true} value="">Select your gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Others</option>
+          </select>
 
           <label className="label">
             <span className="label-text text-sm">Bio:</span>
@@ -112,7 +105,7 @@ export const EditProfile = ({ profileData }) => {
           ></textarea>
 
           <button
-            className="btn btn-primary w-full h-9 text-sm mt-1"
+            className="btn btn-primary w-full h-9 text-lg text-white mt-1"
             onClick={saveProfile}
           >
             Save
@@ -125,12 +118,13 @@ export const EditProfile = ({ profileData }) => {
           />
         </div>
       </div>
-     {toast && <div className="toast toast-top toast-center">
-      
-        <div className="alert alert-success text-white">
-          <span>Profile updated successfully</span>
+      {toast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success text-white">
+            <span>Profile updated successfully</span>
+          </div>
         </div>
-      </div>}
+      )}
     </>
   );
 };
