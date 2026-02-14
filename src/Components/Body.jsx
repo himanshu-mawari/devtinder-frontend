@@ -7,7 +7,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
-
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,8 +18,8 @@ const Body = () => {
       });
       dispatch(addUser(res.data));
     } catch (err) {
-      if(err.status === 401){
-        navigate("/login")
+      if (err.response?.status === 401) {
+        navigate("/login");
       }
     }
   };
@@ -31,8 +30,8 @@ const Body = () => {
 
   return (
     <>
-      <NavBar />
-      <Outlet />
+      <NavBar />    
+      <Outlet /> 
       <Footer />
     </>
   );
