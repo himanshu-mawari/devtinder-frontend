@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { useDispatch } from "react-redux";
+import { checkImageUrl } from "../utils/imageCheck";
 
 export const EditProfile = ({ profileData }) => {
   const [firstName, setFirstName] = useState(profileData.firstName);
@@ -16,9 +17,24 @@ export const EditProfile = ({ profileData }) => {
 
   const [bio, setBio] = useState(profileData.bio);
   const [toast, setToast] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
+  console.log(error);
   const saveProfile = async () => {
+    const newErrors = {};
+
+    const ok = await checkImageUrl(profilePicture);
+
+    if (!ok) {
+      newErrors.profilePicture = "Image URL is broken";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
+    }
+
     const res = await axios.patch(
       BASE_URL + "profile/edit",
       { firstName, lastName, profilePicture, age, gender, bio },
@@ -31,16 +47,15 @@ export const EditProfile = ({ profileData }) => {
     }, 2000);
   };
 
-  return  (
-
+  return (
     <>
-    <div className="flex justify-center items-start gap-x-16 p-4 pb-10 mb-12">
-    <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
-    <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4 pb-2">
-    Edit Profile
-    </h2>
-    
-    <label className="label">
+      <div className="flex justify-center items-start gap-x-16 p-4 pb-10 mb-12">
+        <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
+          <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4 pb-2">
+            Edit Profile
+          </h2>
+
+          <label className="label">
             <span className="label-text text-sm">First Name:</span>
           </label>
           <input
@@ -67,7 +82,9 @@ export const EditProfile = ({ profileData }) => {
             type="text"
             value={profilePicture}
             onChange={(e) => setProfilePicture(e.target.value)}
-            className="input input-bordered w-full h-8 text-sm mb-1"
+            className={`input input-bordered w-full h-8 text-sm mb-1 ${
+              error.profilePicture ? "border-b-2 border-red-600" : ""
+            }`}
           />
 
           <label className="label">
@@ -77,19 +94,24 @@ export const EditProfile = ({ profileData }) => {
             type="number"
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            className = "input input-bordered w-full h-8 text-sm mb-1"
+            className="input input-bordered w-full h-8 text-sm mb-1"
             onKeyDown={(e) => {
               if (["e", "E", "+", "-"].includes(e.key)) {
                 e.preventDefault();
               }
             }}
           />
-
           <label className="label">
             <span className="label-text text-sm ">Gender:</span>
           </label>
-          <select  className="select" value={gender} onChange={(e) => setGender(e.target.value)}>
-            <option disabled={true} value="">Select your gender</option>
+          <select
+            className="select"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option disabled={true} value="">
+              Select your gender
+            </option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="others">Others</option>
@@ -103,7 +125,7 @@ export const EditProfile = ({ profileData }) => {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           ></textarea>
-
+          <p className="text-red-600">{error.profilePicture}</p>
           <button
             className="btn btn-primary w-full h-9 text-lg text-white mt-1"
             onClick={saveProfile}

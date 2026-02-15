@@ -19,8 +19,8 @@ const UserCard = ({ userData }) => {
               <span className="text-xl font-semibold opacity-90">{age}</span>
             )}
           </div>
-          <div className="flex items-start gap-2 text-sm opacity-90">
-            <span>📝</span>
+          <div className="flex items-center gap-2 text-sm opacity-90 ">
+            <span className="text-lg">📝</span>
             <p className="line-clamp-2">{bio}</p>
           </div>
 

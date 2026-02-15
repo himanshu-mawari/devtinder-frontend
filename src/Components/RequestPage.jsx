@@ -39,7 +39,7 @@ const RequestPage = () => {
       <div>
         <div className="w-7/12 mx-auto mt-8 mb-4">
           <h1 className="text-2xl font-semibold border-b border-base-300 pb-3 px-2">
-            Connection requests
+            Pending requests
           </h1>
         </div>
         <div className="mt-4">
@@ -47,22 +47,22 @@ const RequestPage = () => {
             const { firstName, lastName, profilePicture, bio } =
               data.fromUserId;
             return (
-              <div className="mt-5 bg-base-200 w-7/12 mx-auto px-4 py-3 rounded-xl hover:bg-base-300 transition">
+              <div className="mt-5 bg-base-200 w-7/12 mx-auto px-5 pb-3 pt-2 rounded-xl hover:bg-base-300 transition hover:scale-95">
                 <div className="flex gap-4 items-center">
                   <img
                     src={profilePicture}
                     className="w-20 h-20 rounded-full object-cover flex-shrink-0"
                   />
 
-                  <div className="flex-1 ">
-                    <div className="font-semibold text-lg">
+                  <div>
+                    <div className="font-medium text-lg">
                       {firstName} {lastName}
                     </div>
-                    <div className="opacity-70 text-sm line-clamp-2">{bio}</div>
+                    <div className="opacity-70 text-xs line-clamp-1">{bio}</div>
 
-                    <div className="flex gap-5 mt-3">
+                    <div className="flex gap-2 mt-3 mb-2">
                       <button
-                        className="px-8 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 transition duration-200 active:scale-95"
+                        className="px-5 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 transition duration-200 active:scale-95"
                         onClick={() =>
                           handleReviewRequest("accepted", data._id)
                         }
@@ -70,7 +70,7 @@ const RequestPage = () => {
                         Accept
                       </button>
                       <button
-                        className="px-8 py-2 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 transition duration-200 active:scale-95"
+                        className="px-5 py-2 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 transition duration-200 active:scale-95"
                         onClick={() =>
                           handleReviewRequest("rejected", data._id)
                         }
