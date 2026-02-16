@@ -6,9 +6,11 @@ import {
   removeConnectionRequests,
 } from "../utils/requestSlice";
 import { useDispatch, useSelector } from "react-redux";
+ import { useNavigate } from "react-router-dom";
 
 const RequestPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let requests = useSelector((store) => store?.request);
   const receivedRequests = async () => {
     const res = await axios.get(BASE_URL + "user/requests/received", {
@@ -33,6 +35,53 @@ const RequestPage = () => {
       console.error(err.message);
     }
   };
+
+    if (!requests)
+    return (
+      <div className="w-7/12 mx-auto mt-20 space-y-4">
+        <div className="skeleton h-28 w-full rounded-xl"></div>
+        <div className="skeleton h-28 w-full rounded-xl"></div>
+        <div className="skeleton h-28 w-full rounded-xl"></div>
+      </div>
+    );
+
+
+  if(!requests.length) 
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center px-4 mt-10">
+      <div className="max-w-md w-full bg-base-100  p-8 text-center space-y-5">
+
+        <div className="text-5xl">📭</div>
+
+        <h2 className="text-2xl font-bold">
+          No Pending Requests
+        </h2>
+
+        <p className="text-base-content/70">
+          You don’t have any connection requests right now.
+          Explore developers and send some invites.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+          <button
+            className="btn btn-primary px-5 text-lg font-normal tracking-tighter"
+            onClick={() => navigate("/")}
+          >
+            Discover Devs
+          </button>
+
+          <button
+            className="btn btn-outline px-5 text-lg font-normal tracking-tighter"
+            onClick={() => navigate("/connections")}
+          >
+            View Connections
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+
 
   return (
     requests && (

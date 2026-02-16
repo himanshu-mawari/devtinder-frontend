@@ -32,15 +32,33 @@ const Connections = () => {
 
   if (!connections.length)
     return (
-      <div className="mt-64 flex-col flex items-center justify-center gap-4">
-        <div className="text-xl font-medium">No Connections</div>
+      <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="bg-base-100  rounded-2xl p-10 max-w-md w-full text-center space-y-5">
+          <div className="text-5xl">🤝</div>
 
-        <button
-          className="btn btn-primary text-white text-lg px-10 py-2"
-          onClick={() => navigate("/")}
-        >
-          Discover devs
-        </button>
+          <h2 className="text-2xl font-bold">No Connections Yet</h2>
+
+          <p className="text-base-content/70">
+            You haven’t connected with any developers. Start exploring and send
+            a few requests.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <button
+              className="btn btn-primary px-5 text-lg font-normal tracking-tighter"
+              onClick={() => navigate("/")}
+            >
+              Discover Devs
+            </button>
+
+            <button
+              className="btn btn-outline px-5 text-lg font-normal tracking-tighter"
+              onClick={() => navigate("/request")}
+            >
+              View Requests
+            </button>
+          </div>
+        </div>
       </div>
     );
 

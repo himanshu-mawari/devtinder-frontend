@@ -5,10 +5,10 @@ import Feed from "./components/Feed";
 import Profile from "./components/Profile"
 import Connections from "./components/Connection";
 import RequestPage from "./components/RequestPage";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
+import NotFoundCoolUI from "./components/NotFound";
 
 function App() {
   return (
@@ -16,12 +16,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Body />}>
-            <Route path="/" element={<Feed />} />
+            <Route index element={<Feed />} />
             <Route path="login" element={<Login />} />
             <Route path="test" element={<Test />} />
             <Route path="profile" element={<Profile />} />
             <Route path="requests" element={<RequestPage />} />
             <Route path="connections" element={<Connections />} />
+            <Route path="*" element={<NotFoundCoolUI />} />
           </Route>
         </Routes>
       </BrowserRouter>

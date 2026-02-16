@@ -1,6 +1,23 @@
-const UserCard = ({ userData }) => {
-  const { firstName, bio, age, profilePicture, skills } = userData;
+import axios from "axios";
+import { BASE_URL} from "../utils/constants";
+import { removeFeed } from "../utils/feedSlice";
+import { useDispatch } from "react-redux";
 
+const UserCard = ({ userData }) => {
+  const { firstName, bio, age, profilePicture, skills , _id } = userData;
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (status , userId) => {
+    try{
+
+      await axios.post(BASE_URL + `request/send/${status}/${userId}` , {} , {withCredentials : true} );
+      dispatch(removeFeed(userId))
+    } catch(err){
+      console.error(err)
+    }
+
+  }
+  
   return (
     <div className="flex justify-center mt-6">
       <div className="relative w-96 h-[34rem] rounded-xl overflow-hidden shadow-lg">
@@ -35,10 +52,10 @@ const UserCard = ({ userData }) => {
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <button className="h-11 rounded-xl btn bg-blue-400 hover:bg-blue-500 active:bg-blue-600 border-none text-white text-lg shadow-md">
+            <button className="h-11 rounded-xl btn bg-blue-400 hover:bg-blue-500 active:bg-blue-600 border-none text-white text-lg shadow-md" onClick={() => handleSendRequest("ignored" , _id)}>
               Ignore
             </button>
-            <button className="h-11 rounded-xl btn bg-pink-500 hover:bg-pink-600 active:bg-pink-700 border-none text-white text-lg shadow-md">
+            <button className="h-11 rounded-xl btn bg-pink-500 hover:bg-pink-600 active:bg-pink-700 border-none text-white text-lg shadow-md" onClick={() => handleSendRequest("interested" , _id)}>
               Interested
             </button>
           </div>
