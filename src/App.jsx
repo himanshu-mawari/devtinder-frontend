@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 import NotFoundCoolUI from "./components/NotFound";
+import Signup from "./components/Signup";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="requests" element={<RequestPage />} />
             <Route path="connections" element={<Connections />} />
             <Route path="*" element={<NotFoundCoolUI />} />
+            <Route path="signup" element={<Signup/>} />
           </Route>
         </Routes>
       </BrowserRouter>

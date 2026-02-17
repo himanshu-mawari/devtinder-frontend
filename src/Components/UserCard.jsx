@@ -4,6 +4,7 @@ import { removeFeed } from "../utils/feedSlice";
 import { useDispatch } from "react-redux";
 
 const UserCard = ({ userData }) => {
+  console.log(userData)
   const { firstName, bio, age, profilePicture, skills , _id } = userData;
   const dispatch = useDispatch();
 
