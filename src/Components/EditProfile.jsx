@@ -14,13 +14,16 @@ export const EditProfile = ({ profileData }) => {
   const [profilePicture, setProfilePicture] = useState(
     profileData.profilePicture,
   );
+  const [skills, setSkills] = useState([]);
+  const [skillInput, setSkillInput] = useState("");
 
   const [bio, setBio] = useState(profileData.bio);
   const [toast, setToast] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  console.log(error);
+  
+
   const saveProfile = async () => {
     const newErrors = {};
 
@@ -37,7 +40,7 @@ export const EditProfile = ({ profileData }) => {
 
     const res = await axios.patch(
       BASE_URL + "profile/edit",
-      { firstName, lastName, profilePicture, age, gender, bio },
+      { firstName, lastName, profilePicture, age, gender, bio, skills },
       { withCredentials: true },
     );
     dispatch(addUser(res?.data?.data));
@@ -45,6 +48,25 @@ export const EditProfile = ({ profileData }) => {
     setTimeout(() => {
       setToast(false);
     }, 2000);
+  };
+
+  const handleAddSkill = () => {
+    const cleaned = skillInput.trim().toLowerCase();
+
+    if (cleaned.length < 2) return;
+
+    if (skills.includes(cleaned)) {
+      alert("Skill already added");
+      return;
+    }
+
+    if (skills.length >= 20) {
+      alert("Max 20 skills allowed");
+      return;
+    }
+
+    setSkills([...skills, cleaned]);
+    setSkillInput("");
   };
 
   return (
@@ -116,6 +138,49 @@ export const EditProfile = ({ profileData }) => {
             <option value="female">Female</option>
             <option value="others">Others</option>
           </select>
+
+          <label className="label">
+            <span className="label-text text-sm">Skills: </span>
+          </label>
+          <div>
+            <div className="flex items-center gap-2 w-full">
+              <input
+                type="text"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
+                className="input input-bordered flex-1 h-9 text-sm"
+                placeholder="Add a skill"
+              />
+
+              <button
+                onClick={handleAddSkill}
+                className="btn btn-primary  px-4 btn-sm"
+              >
+                Add
+              </button>
+            </div>
+            <div>
+             {skills.length > 0 && (
+  <div className="flex flex-wrap gap-2 mt-2">
+    {skills.map((skill) => (
+      <div
+        key={skill}
+        className="badge badge-outline badge-lg gap-2"
+      >
+        {skill}
+        <button
+          className="text-xs"
+        >
+          ✕
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
+            </div>
+          </div>
 
           <label className="label">
             <span className="label-text text-sm">Bio:</span>
