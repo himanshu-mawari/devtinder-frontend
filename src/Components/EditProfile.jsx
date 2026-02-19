@@ -14,15 +14,13 @@ export const EditProfile = ({ profileData }) => {
   const [profilePicture, setProfilePicture] = useState(
     profileData.profilePicture,
   );
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState(profileData.skills || []);
   const [skillInput, setSkillInput] = useState("");
 
   const [bio, setBio] = useState(profileData.bio);
   const [toast, setToast] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-
-  
 
   const saveProfile = async () => {
     const newErrors = {};
@@ -67,6 +65,22 @@ export const EditProfile = ({ profileData }) => {
 
     setSkills([...skills, cleaned]);
     setSkillInput("");
+  };
+
+  const handleRemoveSkill = async (skillToRemove) => {
+    const previousSkill = skills;
+    try {
+      setSkills((prev) => prev.filter((skill) => skill !== skillToRemove));
+
+      await axios.patch(
+        BASE_URL + "profile/remove/skill",
+        { removeSkill: skillToRemove },
+        { withCredentials: true },
+      );
+    } catch (err) {
+      setSkills(previousSkill);
+      setError(err.message);
+    }
   };
 
   return (
@@ -160,26 +174,26 @@ export const EditProfile = ({ profileData }) => {
                 Add
               </button>
             </div>
-            <div>
-             {skills.length > 0 && (
-  <div className="flex flex-wrap gap-2 mt-2">
-    {skills.map((skill) => (
-      <div
-        key={skill}
-        className="badge badge-outline badge-lg gap-2"
-      >
-        {skill}
-        <button
-          className="text-xs"
-        >
-          ✕
-        </button>
-      </div>
-    ))}
-  </div>
-)}
-
-            </div>
+            {skills.length > 0 && (
+              <div className="border p-3 rounded-xl my-3">
+                <div className="flex flex-wrap  gap-2">
+                  {skills.map((skill) => (
+                    <div
+                      key={skill}
+                      className="badge badge-outline badge-lg gap-2"
+                    >
+                      {skill}
+                      <button
+                        className="text-xs"
+                        onClick={() => handleRemoveSkill(skill)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <label className="label">
@@ -201,7 +215,15 @@ export const EditProfile = ({ profileData }) => {
 
         <div className="w-full max-w-sm">
           <UserCard
-            userData={{ firstName, lastName, profilePicture, age, gender, bio }}
+            userData={{
+              firstName,
+              lastName,
+              profilePicture,
+              age,
+              gender,
+              bio,
+              skills,
+            }}
           />
         </div>
       </div>
