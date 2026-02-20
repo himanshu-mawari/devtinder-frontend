@@ -1,11 +1,10 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import EditProfile from "./EditProfile";
 
 const Profile = () => {
   const userData = useSelector((store) => store?.user);
   const navigate = useNavigate();
-
-  if (!userData) return null;
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4 pb-20">

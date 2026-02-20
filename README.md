@@ -1,16 +1,72 @@
-# React + Vite
+# 🚀 DevTinder – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for **DevTinder**, a developer networking platform designed to help developers connect and build meaningful professional relationships.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 💡 Why DevTinder?
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+DevTinder helps developers discover and connect with peers efficiently, showcasing practical skills in building a modern, scalable, and maintainable frontend application.  
+It highlights real-world React, Redux, and API integration expertise — exactly what employers look for in a frontend developer.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React.js** – JavaScript library for building user interfaces  
+- **Redux Toolkit** – State management solution for predictable global state  
+- **React Router DOM** – Client-side routing  
+- **Axios** – HTTP client for API communication  
+- **Tailwind CSS** – Utility-first CSS framework for styling  
+- **Vite** – Fast build tool and development server  
+
+---
+## 📌 Features
+
+- 🔐 Authentication (Login / Logout)
+- 👤 Edit Profile
+- 🧑‍💻 Developer Feed
+- 🤝 Send / Accept Connection Requests
+- 📩 View Connections
+- ⚡ Global state management using Redux
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/devtinder-frontend.git
+```
+
+Navigate to the project directory:
+
+```bash
+cd devtinder-frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+---
+
+## 🔗 Backend Repository
+Backend source code:
+👉🏻 https://github.com/himanshu-mawari/devTinder
+
+---
+
+
+## 🎯 Project Vision
+
+DevTinder is a Frontend application built with scalability, performance, and maintainability in mind.  
+It demonstrates clean architecture, robust state management, and modern UI/UX practices suitable for real-world usage.

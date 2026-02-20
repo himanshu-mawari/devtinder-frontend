@@ -21,39 +21,35 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      if (email === "" && password === "") {
+      if (!email || !password ) {
         setError("Email and password required");
         return;
       }
-
-     
-
       const user = await axios.post(
         BASE_URL + "login",
         {
           email,
           password,
         },
-        { withCredentials: true }, //tells the browser to send and accept cookies or authentication credentials for cross-origin requests
+        { withCredentials: true }, 
       );
-      dispatch(addUser(user.data));
+      dispatch(addUser(user.data.data));
 
       setToast(true);
-      setToastMessage("login successfully");
+      setToastMessage(user.data.message);
       setToastType("success");
       setTimeout(() => {
         setToast(false);
         navigate("/");
       }, 500);
 
-    } catch {
-      setToastMessage("login failed");
+    } catch (err){
+      setToastMessage(err.data.message);
       setToastType("failed");
       setToast(true);
       setTimeout(() => {
         setToast(false);
       }, 2000);
-      setError("Email address and password is incorrect");
     }
   };
 

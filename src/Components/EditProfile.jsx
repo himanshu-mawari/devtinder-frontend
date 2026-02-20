@@ -1,25 +1,24 @@
-import { useState , useEffect } from "react";
+import { useState } from "react";
 import UserCard from "../components/UserCard";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
-import { useDispatch , useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkImageUrl } from "../utils/imageCheck";
-import Toast from "../components/Toast"
+import Toast from "../components/Toast";
 
 export const EditProfile = () => {
-  const userData = useSelector(store => store?.user);
+  const userData = useSelector((store) => store?.user);
 
-  const [firstName, setFirstName] = useState(userData.firstName || "");
-  const [lastName, setLastName] = useState(userData.lastName || "");
-  const [age, setAge] = useState(userData.age || "");
-  const [gender, setGender] = useState(userData.gender || "");
-const [profilePicture, setProfilePicture] = useState(
-  userData.profilePicture || ""
-);
-const [bio, setBio] = useState(userData.bio || "");
-const [skills, setSkills] = useState(userData.skills || []);
-
+  const [firstName, setFirstName] = useState(userData?.firstName || "");
+  const [lastName, setLastName] = useState(userData?.lastName || "");
+  const [age, setAge] = useState(userData?.age || "");
+  const [gender, setGender] = useState(userData?.gender || "");
+  const [profilePicture, setProfilePicture] = useState(
+    userData?.profilePicture || "",
+  );
+  const [bio, setBio] = useState(userData?.bio || "");
+  const [skills, setSkills] = useState(userData?.skills || []);
 
   const [skillInput, setSkillInput] = useState("");
   const [toast, setToast] = useState(false);
@@ -29,10 +28,19 @@ const [skills, setSkills] = useState(userData.skills || []);
   const saveProfile = async () => {
     const newErrors = {};
 
+    setError({});
+
     const ok = await checkImageUrl(profilePicture);
 
     if (!ok) {
       newErrors.profilePicture = "Image URL is broken";
+    }
+
+    if (age && age < 18) {
+      newErrors.age = "You must be at least 18 yrs old";
+    }
+    if (age > 70) {
+      newErrors.age = "You age must be between 18 - 70";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -45,8 +53,10 @@ const [skills, setSkills] = useState(userData.skills || []);
       { firstName, lastName, profilePicture, age, gender, bio, skills },
       { withCredentials: true },
     );
+
     dispatch(addUser(res?.data?.data));
     setToast(true);
+
     setTimeout(() => {
       setToast(false);
     }, 2000);
@@ -82,17 +92,15 @@ const [skills, setSkills] = useState(userData.skills || []);
         { withCredentials: true },
       );
     } catch (err) {
-      
       setSkills(previousSkill);
       setError(err.message);
     }
   };
 
-  if(!userData) return;
+  if(!userData) return null;
 
-  return ( 
+  return (
     <>
-   
       <div className="flex justify-center items-start gap-x-16 p-4 pb-10 mb-12">
         <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
           <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4 pb-2">
@@ -213,6 +221,7 @@ const [skills, setSkills] = useState(userData.skills || []);
             onChange={(e) => setBio(e.target.value)}
           ></textarea>
           <p className="text-red-600">{error.profilePicture}</p>
+          <p className="text-red-600">{error.age}</p>
           <button
             className="btn btn-primary w-full h-9 text-lg text-white mt-1"
             onClick={saveProfile}
@@ -234,9 +243,9 @@ const [skills, setSkills] = useState(userData.skills || []);
             }}
           />
         </div>
-        {toast && <Toast message="Profile updated successfully"/>}
+        {toast && <Toast message="Profile updated sucessfully" />}
       </div>
-          </>
+    </>
   );
 };
 
