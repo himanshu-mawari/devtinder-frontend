@@ -30,8 +30,8 @@ const Body = () => {
 
   return (
     <>
-      <NavBar />    
-      <Outlet /> 
+      <NavBar /> 
+      <Outlet />
       <Footer />
     </>
   );

@@ -5,16 +5,18 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Toast from "../components/Toast";
 
 const Login = () => {
-  const [email, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmailId] = useState("himanshumawari@gmail.com");
+  const [password, setPassword] = useState("Himanshu@123");
   const [error, setError] = useState("");
   const [visibility, setVisibility] = useState(false);
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,10 +26,7 @@ const Login = () => {
         return;
       }
 
-      if (!email.includes("@gmail.com")) {
-        setError("Please enter a valid email address");
-        return;
-      }
+     
 
       const user = await axios.post(
         BASE_URL + "login",
@@ -38,68 +37,93 @@ const Login = () => {
         { withCredentials: true }, //tells the browser to send and accept cookies or authentication credentials for cross-origin requests
       );
       dispatch(addUser(user.data));
-      navigate("/");
+
+      setToast(true);
+      setToastMessage("login successfully");
+      setToastType("success");
+      setTimeout(() => {
+        setToast(false);
+        navigate("/");
+      }, 500);
+
     } catch {
+      setToastMessage("login failed");
+      setToastType("failed");
+      setToast(true);
+      setTimeout(() => {
+        setToast(false);
+      }, 2000);
       setError("Email address and password is incorrect");
     }
   };
 
   return (
-    <div className="flex justify-center mt-16  ">
-      <div className="card card-border bg-base-200 w-full max-w-md p-2">
-        <div className="card-body flex flex-col gap-y-4">
-          <h2 className="text-left pb-2 text-4xl font-bold font-login mb-5 tracking-wide border-b-2 border-white ">
+    <div className="flex justify-center mt-16 px-4">
+      <div className="card bg-base-200 w-full max-w-md shadow-2xl border border-white/5">
+        <div className="card-body gap-y-6">
+          <h2 className="text-4xl font-bold font-login tracking-wide border-b border-white/20 pb-4">
             Welcome Back
           </h2>
-          <form
-            onSubmit={handleLogin}
-            className="flex flex-col gap-y-5 relative"
-          >
-            <input
-              type="type"
-              placeholder="✉︎ email address"
-              className="input input-bordered w-full text-md  "
-              value={email}
-              onChange={(e) => setEmailId(e.target.value)}
-            />
 
-            <input
-              type={visibility ? "text" : "password"}
-              placeholder="🔒︎ password"
-              className=" input input-bordered w-full text-md active:text-opacity-100 "
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <form onSubmit={handleLogin} className="flex flex-col gap-y-4">
+            <div className="form-control">
+              <input
+                type="email"
+                placeholder="✉︎ email address"
+                className="input input-bordered w-full focus:border-[#7261f2]"
+                value={email}
+                onChange={(e) => setEmailId(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-control relative">
+              <input
+                type={visibility ? "text" : "password"}
+                placeholder="🔒︎ password"
+                className="input input-bordered w-full pr-12 focus:border-[#7261f2]"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-50 hover:opacity-100 transition-opacity"
+                onClick={() => {
+                  setVisibility(true);
+                  setTimeout(() => setVisibility(false), 3000);
+                }}
+              >
+                {visibility ? <FaEye /> : <FaEyeSlash />}
+              </button>
+            </div>
+
+            {error && (
+              <p className="text-error text-sm ml-1 animate-pulse">
+                ⚠️ {error}
+              </p>
+            )}
+
             <button
-              type="button"
-              className="absolute top-[5.2rem] right-5 text-lg  "
-              onClick={() => {
-                setVisibility(!visibility);
-                setTimeout(() => {
-                  setVisibility(false);
-                }, 3000);
-              }}
-            >
-              {visibility ? <FaEye /> : <FaEyeSlash />}
-            </button>
-            <button
-              className="btn btn-primary w-full text-white font-medium text-lg "
+              className="btn btn-primary w-full text-white font-bold text-lg mt-2 shadow-lg"
               type="submit"
             >
               Login
             </button>
           </form>
 
-          <p className="text-red-700 ml-2">{error} </p>
-          <div className="card-actions justify-end"></div>
-          <div className="text-sm opacity-80 text-center">
+          <div className="text-sm opacity-70 text-center mt-2">
             Don't have an account?{" "}
-            <span className="text-[#7261f2]  hover:border-[#7261f2] pb-1 hover:border-b-2">
-              <Link to="/signup">Sign up</Link>
-            </span>
+            <Link
+              to="/signup"
+              className="text-[#7261f2] font-semibold hover:underline decoration-2 underline-offset-4"
+            >
+              Sign up
+            </Link>
           </div>
         </div>
       </div>
+      {toast && <Toast message={toastMessage} type={toastType} />}
     </div>
   );
 };

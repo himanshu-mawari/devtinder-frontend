@@ -5,7 +5,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], 
-        login: ['"Lobster Two"' , "cursive  "]
+        login: ['"Lobster Two"' , "cursive"],
+        logo: ["Inter" , "Poppins"]
       },
     },
   },

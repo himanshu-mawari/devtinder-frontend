@@ -84,57 +84,57 @@ const RequestPage = () => {
 
 
   return (
-    requests && (
-      <div>
-        <div className="w-7/12 mx-auto mt-8 mb-4">
-          <h1 className="text-2xl font-semibold border-b border-base-300 pb-3 px-2">
-            Pending requests
-          </h1>
-        </div>
-        <div className="mt-4">
-          {requests.map((data) => {
-            const { firstName, lastName, profilePicture, bio } =
-              data.fromUserId;
-            return (
-              <div className="mt-5 bg-base-200 w-7/12 mx-auto px-5 pb-3 pt-2 rounded-xl hover:bg-base-300 transition hover:scale-95">
-                <div className="flex gap-4 items-center">
-                  <img
-                    src={profilePicture}
-                    className="w-20 h-20 rounded-full object-cover flex-shrink-0"
-                  />
+  <div className="max-w-3xl mx-auto mt-8 px-4 pb-20">
+    <div className="mb-6">
+      <h1 className="text-2xl font-bold tracking-tight text-white border-b border-base-300 pb-4 px-2">
+        Pending Requests
+        <span className="ml-3 text-sm font-normal text-gray-500">({requests.length})</span>
+      </h1>
+    </div>
 
-                  <div>
-                    <div className="font-medium text-lg">
-                      {firstName} {lastName}
-                    </div>
-                    <div className="opacity-70 text-xs line-clamp-1">{bio}</div>
-
-                    <div className="flex gap-2 mt-3 mb-2">
-                      <button
-                        className="px-5 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 transition duration-200 active:scale-95"
-                        onClick={() =>
-                          handleReviewRequest("accepted", data._id)
-                        }
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="px-5 py-2 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 transition duration-200 active:scale-95"
-                        onClick={() =>
-                          handleReviewRequest("rejected", data._id)
-                        }
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                </div>
+    <div className="flex flex-col gap-4">
+      {requests.map((data) => {
+        const { firstName, lastName, profilePicture, bio } = data.fromUserId;
+        
+        return (
+          <div 
+            key={data._id}
+            className="group flex flex-col sm:flex-row items-center gap-5 bg-base-200 p-5 rounded-2xl hover:bg-base-300 hover:scale-[1.01] transition-all duration-200 border border-transparent hover:border-white/5"
+          >
+            <div className="avatar">
+              <div className="w-20 h-20 rounded-full ring-2 ring-offset-base-100 ring-[#4f9cff]/20 group-hover:ring-[#4f9cff]/50 transition-all">
+                <img src={profilePicture} className="object-cover" alt={firstName} />
               </div>
-            );
-          })}
-        </div>
-      </div>
-    )
+            </div>
+
+            <div className="flex-1 text-center sm:text-left min-w-0">
+              <h2 className="font-bold text-lg text-white capitalize">
+                {firstName} {lastName}
+              </h2>
+              <p className="text-gray-400 text-sm line-clamp-2 italic font-light mt-1">
+                {bio || "Looking to connect with developers!"}
+              </p>
+
+              <div className="flex gap-3 mt-4 justify-center sm:justify-start">
+                <button
+                  className="btn btn-primary btn-sm px-6 rounded-lg shadow-md shadow-primary/10"
+                  onClick={() => handleReviewRequest("accepted", data._id)}
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-outline btn-sm px-6 rounded-lg border-white/10 hover:bg-error/10 hover:border-error hover:text-error"
+                  onClick={() => handleReviewRequest("rejected", data._id)}
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
   );
 };
 

@@ -5,6 +5,7 @@ import Feed from "./components/Feed";
 import Profile from "./components/Profile"
 import Connections from "./components/Connection";
 import RequestPage from "./components/RequestPage";
+import EditProfile from "./components/EditProfile";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
@@ -20,7 +21,8 @@ function App() {
             <Route index element={<Feed />} />
             <Route path="login" element={<Login />} />
             <Route path="test" element={<Test />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="profile/view" element={<Profile />} />
+            <Route path="profile/edit" element={<EditProfile />} />
             <Route path="requests" element={<RequestPage />} />
             <Route path="connections" element={<Connections />} />
             <Route path="*" element={<NotFoundCoolUI />} />

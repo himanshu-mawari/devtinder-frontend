@@ -63,43 +63,75 @@ const Connections = () => {
     );
 
   return (
-    <div>
-      <div className="w-7/12 mx-auto mt-8 mb-4">
-        <h1 className="text-2xl font-semibold border-b border-base-300 pb-3 px-2">
+    <div className="max-w-3xl mx-auto mt-8 px-4 pb-20">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-white border-b border-base-300 pb-4 px-2">
           Your Connections
+          <span className="ml-3 text-sm font-normal text-gray-500">
+            ({connections.length})
+          </span>
         </h1>
       </div>
-      <div className="mt-4">
+
+      <div className="flex flex-col gap-3">
         {connections.map((data) => {
-          const { firstName, lastName, profilePicture, bio } = data;
+          const { firstName, lastName, profilePicture, bio, _id } = data;
           return (
-            <div className="flex justify-center mt-3">
-              <div className="flex items-center gap-4 bg-base-200 w-7/12 mx-auto px-8 py-3 rounded-xl cursor-pointer hover:scale-95 hover:bg-base-300 transition">
-                <img
-                  src={profilePicture}
-                  className="w-20 h-20 rounded-full object-cover flex-shrink-0"
-                />
-
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-lg">
-                    {firstName} {lastName}
-                  </div>
-
-                  <div className="opacity-70 text-sm line-clamp-2">{bio}</div>
+            <div
+              key={_id}
+              className="flex items-center gap-5 bg-base-200 p-4 rounded-2xl cursor-pointer hover:bg-base-300 hover:scale-[1.01] transition-all duration-200 border border-transparent hover:border-white/5"
+            >
+              <div className="avatar">
+                <div className="w-16 h-16 rounded-full ring-2 ring-offset-base-100 ring-[#4f9cff]/30">
+                  <img
+                    src={profilePicture}
+                    className="object-cover"
+                    alt={firstName}
+                  />
                 </div>
-                <div className="dropdown dropdown-right">
-                  <div tabIndex={0} role="button" className="btn m-1 text-xl">
-                    ⋮
-                  </div>
-                  <ul
-                    tabIndex={0}
-                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-lg text-white truncate">
+                  {firstName} {lastName}
+                </h2>
+                <p className="text-gray-400 text-sm line-clamp-1 italic font-light">
+                  {bio || "No bio provided"}
+                </p>
+              </div>
+
+              <div className="dropdown dropdown-left">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle text-gray-400 hover:text-white"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    <li>
-                      <a>Remove connection</a>
-                    </li>
-                  </ul>
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="12" cy="5" r="1" />
+                    <circle cx="12" cy="19" r="1" />
+                  </svg>
                 </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-base-100 rounded-box z-[1] w-48 p-2 shadow-xl border border-white/5"
+                >
+                  <li>
+                    <a className="text-error hover:bg-error/10 font-medium">
+                      Remove connection
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           );

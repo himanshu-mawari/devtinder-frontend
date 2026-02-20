@@ -1,23 +1,27 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import UserCard from "../components/UserCard";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { checkImageUrl } from "../utils/imageCheck";
+import Toast from "../components/Toast"
 
-export const EditProfile = ({ profileData }) => {
-  const [firstName, setFirstName] = useState(profileData.firstName);
-  const [lastName, setLastName] = useState(profileData.lastName);
-  const [age, setAge] = useState(profileData.age);
-  const [gender, setGender] = useState(profileData.gender);
-  const [profilePicture, setProfilePicture] = useState(
-    profileData.profilePicture,
-  );
-  const [skills, setSkills] = useState(profileData.skills || []);
+export const EditProfile = () => {
+  const userData = useSelector(store => store?.user);
+
+  const [firstName, setFirstName] = useState(userData.firstName || "");
+  const [lastName, setLastName] = useState(userData.lastName || "");
+  const [age, setAge] = useState(userData.age || "");
+  const [gender, setGender] = useState(userData.gender || "");
+const [profilePicture, setProfilePicture] = useState(
+  userData.profilePicture || ""
+);
+const [bio, setBio] = useState(userData.bio || "");
+const [skills, setSkills] = useState(userData.skills || []);
+
+
   const [skillInput, setSkillInput] = useState("");
-
-  const [bio, setBio] = useState(profileData.bio);
   const [toast, setToast] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
@@ -78,13 +82,17 @@ export const EditProfile = ({ profileData }) => {
         { withCredentials: true },
       );
     } catch (err) {
+      
       setSkills(previousSkill);
       setError(err.message);
     }
   };
 
-  return (
+  if(!userData) return;
+
+  return ( 
     <>
+   
       <div className="flex justify-center items-start gap-x-16 p-4 pb-10 mb-12">
         <div className="card bg-base-300 shadow-xl w-full max-w-md p-6">
           <h2 className="card-title justify-center text-xl border-b-2 border-indigo-300 inline-block mb-4 pb-2">
@@ -226,15 +234,9 @@ export const EditProfile = ({ profileData }) => {
             }}
           />
         </div>
+        {toast && <Toast message="Profile updated successfully"/>}
       </div>
-      {toast && (
-        <div className="toast toast-top toast-center">
-          <div className="alert alert-success text-white">
-            <span>Profile updated successfully</span>
-          </div>
-        </div>
-      )}
-    </>
+          </>
   );
 };
 
