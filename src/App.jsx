@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 import NotFoundCoolUI from "./components/NotFound";
 import Signup from "./components/Signup";
+import ChangePassword from "./components/ChangePassword";
 
 function App() {
   return (
@@ -20,13 +21,15 @@ function App() {
           <Route path="/" element={<Body />}>
             <Route index element={<Feed />} />
             <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup/>} />
             <Route path="test" element={<Test />} />
             <Route path="profile/view" element={<Profile />} />
             <Route path="profile/edit" element={<EditProfile />} />
             <Route path="requests" element={<RequestPage />} />
             <Route path="connections" element={<Connections />} />
+            <Route path="change-password" element={<ChangePassword />} />
+
             <Route path="*" element={<NotFoundCoolUI />} />
-            <Route path="signup" element={<Signup/>} />
           </Route>
         </Routes>
       </BrowserRouter>

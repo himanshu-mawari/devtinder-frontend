@@ -16,7 +16,6 @@ const Signup = () => {
   const [visibility, setVisibility] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(error);
   const handleSignup = async () => {
     try {
       const user = await axios.post(
