@@ -7,11 +7,11 @@ import { addUser } from "../utils/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup = () => {
-  const [email, setEmailId] = useState("adalovelace@gmail.com");
-  const [password, setPassword] = useState("Ada@123");
-  const [firstName, setFirstName] = useState("Ada");
-  const [lastName, setLastName] = useState("lovelace");
-  const [confirmPassword, setConfirmPassword] = useState("Ada@123");
+  const [email, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [visibility, setVisibility] = useState(false);
   const dispatch = useDispatch();

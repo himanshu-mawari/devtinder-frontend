@@ -86,7 +86,7 @@ const RequestPage = () => {
   return (
   <div className="max-w-3xl mx-auto mt-8 px-4 pb-20">
     <div className="mb-6">
-      <h1 className="text-2xl font-bold tracking-tight text-white border-b border-base-300 pb-4 px-2">
+      <h1 className="text-2xl font-bold tracking-tight text-based-content border-b border-base-300 pb-4 px-2">
         Pending Requests
         <span className="ml-3 text-sm font-normal text-gray-500">({requests.length})</span>
       </h1>
@@ -108,10 +108,10 @@ const RequestPage = () => {
             </div>
 
             <div className="flex-1 text-center sm:text-left min-w-0">
-              <h2 className="font-bold text-lg text-white capitalize">
+              <h2 className="font-bold text-lg text-based-content capitalize">
                 {firstName} {lastName}
               </h2>
-              <p className="text-gray-400 text-sm line-clamp-2 italic font-light mt-1">
+              <p className="text-based-content text-sm line-clamp-2 italic font-light mt-1">
                 {bio || "Looking to connect with developers!"}
               </p>
 

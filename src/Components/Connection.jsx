@@ -65,7 +65,7 @@ const Connections = () => {
   return (
     <div className="max-w-3xl mx-auto mt-8 px-4 pb-20">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-white border-b border-base-300 pb-4 px-2">
+        <h1 className="text-2xl font-bold tracking-tight text-based-content border-b border-base-300 pb-4 px-2">
           Your Connections
           <span className="ml-3 text-sm font-normal text-gray-500">
             ({connections.length})
@@ -92,15 +92,15 @@ const Connections = () => {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h2 className="font-bold text-lg text-white truncate">
+                <h2 className="font-bold text-lg text-based-contenttruncate">
                   {firstName} {lastName}
                 </h2>
-                <p className="text-gray-400 text-sm line-clamp-1 italic font-light">
+                <p className="text-based-content text-sm line-clamp-1 italic font-light">
                   {bio || "No bio provided"}
                 </p>
               </div>
 
-              <div className="dropdown dropdown-left">
+              <div className="dropdown dropdown-right">
                 <div
                   tabIndex={0}
                   role="button"

@@ -8,8 +8,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Toast from "../components/Toast";
 
 const Login = () => {
-  const [email, setEmailId] = useState("himanshumawari@gmail.com");
-  const [password, setPassword] = useState("Himanshu@123");
+  const [email, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [visibility, setVisibility] = useState(false);
   const [toast, setToast] = useState(false);
