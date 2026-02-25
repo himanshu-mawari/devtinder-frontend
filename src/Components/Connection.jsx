@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
-import { addConnection } from "../utils/connectionSlice";
+import { addConnection , removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,15 @@ const Connections = () => {
   useEffect(() => {
     getConnection();
   }, []);
+
+  const handleRemoveConnection = async (userId) => {
+    try{
+       await axios.delete(`${BASE_URL}request/connection/${userId}`, {withCredentials:true});
+       dispatch(removeConnection(userId))
+    }catch(err){
+      console.log(err.message)
+    }
+  }
 
   if (!connections)
     return (
@@ -127,7 +136,7 @@ const Connections = () => {
                   className="dropdown-content menu bg-base-100 rounded-box z-[1] w-48 p-2 shadow-xl border border-white/5"
                 >
                   <li>
-                    <a className="text-error hover:bg-error/10 font-medium">
+                    <a className="text-error hover:bg-error/10 font-medium" onClick={() => handleRemoveConnection(data._id)}>
                       Remove connection
                     </a>
                   </li>

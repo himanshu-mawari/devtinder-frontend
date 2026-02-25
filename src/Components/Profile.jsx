@@ -6,19 +6,25 @@ const Profile = () => {
   const userData = useSelector((store) => store?.user);
   const navigate = useNavigate();
 
+  if(!userData){
+    return(
+      <div>Loading data...</div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4 pb-20">
       <div className="max-w-md w-full bg-base-300 rounded-3xl overflow-hidden shadow-2xl  flex flex-col">
         <div className="px-8 pt-8 pb-4">
           <h1 className="text-4xl font-bold text-based-content leading-tight">
-            {userData.firstName}, {userData.age}
+            {userData?.firstName}, {userData?.age}
           </h1>
         </div>
 
         <div className="px-8">
           <div className="w-full aspect-square rounded-2xl overflow-hidden border border-slate-600 shadow-inner">
             <img
-              src={userData.profilePicture}
+              src={userData?.profilePicture}
               alt="Profile"
               className="w-full h-full object-cover"
             />
@@ -31,7 +37,7 @@ const Profile = () => {
               Bio
             </h3>
             <p className="text-based-content text-sm leading-relaxed italic">
-              "{userData.bio}"
+              "{userData?.bio}"
             </p>
           </div>
 
@@ -62,7 +68,7 @@ const Profile = () => {
 
           <div className="flex justify-center pt-4">
             <button
-              className="w-32 bg-blue-600 text-based-contentfont-semibold py-3 rounded-full hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/20"
+              className="w-32 bg-blue-600 text-based-content font-semibold py-3 rounded-full  hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/20"
               onClick={() => navigate("/profile/edit")}
             >
               Edit Info

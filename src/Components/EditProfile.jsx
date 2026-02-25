@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserCard from "../components/UserCard";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
@@ -8,58 +8,71 @@ import { checkImageUrl } from "../utils/imageCheck";
 import Toast from "../components/Toast";
 
 export const EditProfile = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
+  const [bio, setBio] = useState("");
+  const [skills, setSkills] = useState([]);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
   const userData = useSelector((store) => store?.user);
-
-  const [firstName, setFirstName] = useState(userData?.firstName || "");
-  const [lastName, setLastName] = useState(userData?.lastName || "");
-  const [age, setAge] = useState(userData?.age || "");
-  const [gender, setGender] = useState(userData?.gender || "");
-  const [profilePicture, setProfilePicture] = useState(
-    userData?.profilePicture || "",
-  );
-  const [bio, setBio] = useState(userData?.bio || "");
-  const [skills, setSkills] = useState(userData?.skills || []);
 
   const [skillInput, setSkillInput] = useState("");
   const [toast, setToast] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!userData) return;
+    setFirstName(userData?.firstName || "");
+    setLastName(userData?.lastName || "");
+    setAge(userData?.age || "");
+    setGender(userData?.gender || "");
+    setProfilePicture(userData?.profilePicture || "");
+    setSkills(userData?.skills || []);
+    setBio(userData?.bio || []);
+  }, [userData]);
 
   const saveProfile = async () => {
     const newErrors = {};
-
-    setError({});
+    setError({}); 
 
     const ok = await checkImageUrl(profilePicture);
-
-    if (!ok) {
-      newErrors.profilePicture = "Image URL is broken";
-    }
-
-    if (age && age < 18) {
-      newErrors.age = "You must be at least 18 yrs old";
-    }
-    if (age > 70) {
-      newErrors.age = "You age must be between 18 - 70";
-    }
+    if (!ok) newErrors.profilePicture = "Image URL is broken";
+    if (age && age < 18) newErrors.age = "You must be at least 18 yrs old";
+    if (age > 70) newErrors.age = "Your age must be between 18 - 70";
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);
       return;
     }
 
-    const res = await axios.patch(
-      BASE_URL + "profile/edit",
-      { firstName, lastName, profilePicture, age, gender, bio, skills },
-      { withCredentials: true },
-    );
+    try {
+      const res = await axios.patch(
+        BASE_URL + "profile/edit",
+        { firstName, lastName, profilePicture, age, gender, bio, skills },
+        { withCredentials: true },
+      );
 
-    dispatch(addUser(res?.data?.data));
-    setToast(true);
+      dispatch(addUser(res?.data?.data));
 
-    setTimeout(() => {
-      setToast(false);
-    }, 2000);
+      setToast(true);
+      setToastMessage(res?.data?.message || "Profile updated successfully");
+      setToastType("success");
+      setTimeout(() => setToast(false), 2000);
+    } catch (err) {
+      const message =
+        err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "Something went wrong";
+
+      setToast(true);
+      setToastMessage(message);
+      setToastType("failed");
+      setTimeout(() => setToast(false), 3000);
+    }
   };
 
   const handleAddSkill = () => {
@@ -97,7 +110,7 @@ export const EditProfile = () => {
     }
   };
 
-  if(!userData) return null;
+  if (!userData) return null;
 
   return (
     <>
@@ -166,8 +179,9 @@ export const EditProfile = () => {
             </option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-            <option value="others">Others</option>
+            <option value="other">Other</option>
           </select>
+          {gender === "" && <p class="text-xs mt-1 text-red-500">Please select a gender</p>}
 
           <label className="label">
             <span className="label-text text-sm">Skills: </span>
@@ -243,7 +257,7 @@ export const EditProfile = () => {
             }}
           />
         </div>
-        {toast && <Toast message="Profile updated sucessfully" />}
+        {toast && <Toast message={toastMessage} type={toastType}/>}
       </div>
     </>
   );

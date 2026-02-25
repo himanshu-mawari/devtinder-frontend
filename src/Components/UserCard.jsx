@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 const UserCard = ({ userData }) => {
   const { firstName, bio, age, profilePicture, skills, _id } = userData;
   const dispatch = useDispatch();
+  console.log(userData)
 
   const handleSendRequest = async (status, userId) => {
     await axios.post(
@@ -20,7 +21,7 @@ const UserCard = ({ userData }) => {
     <div className="flex justify-center mt-3 px-4">
       <div className="relative w-full max-w-[24rem] h-[36rem] rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 group">
         <img
-          src={profilePicture || "https://via.placeholder.com/400x600"}
+          src={profilePicture || null}
           alt="profile"
           className="w-full h-full object-cover"
         />

@@ -21,17 +21,18 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      if (!email || !password ) {
+      if (!email || !password) {
         setError("Email and password required");
         return;
       }
+
       const user = await axios.post(
         BASE_URL + "login",
         {
           email,
           password,
         },
-        { withCredentials: true }, 
+        { withCredentials: true },
       );
       dispatch(addUser(user.data.data));
 
@@ -42,14 +43,16 @@ const Login = () => {
         setToast(false);
         navigate("/");
       }, 500);
+    } catch (err) {
+      const message =
+        err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "Something went wrong";
 
-    } catch (err){
-      setToastMessage(err.data.message);
+      setToastMessage(message);
       setToastType("failed");
       setToast(true);
-      setTimeout(() => {
-        setToast(false);
-      }, 2000);
+      setTimeout(() => setToast(false), 2000);
     }
   };
 
