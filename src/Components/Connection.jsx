@@ -1,34 +1,49 @@
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
-import { useEffect } from "react";
-import { addConnection , removeConnection } from "../utils/connectionSlice";
+import { useEffect , useState} from "react";
+import { addConnection, removeConnection } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getConnection, deleteConnection } from "../services/connectionService";
+import Toast from "./Toast";
 
 const Connections = () => {
+  const [toast , setToast] = useState(null)
   const dispatch = useDispatch();
   const connections = useSelector((store) => store?.connection);
   const navigate = useNavigate();
+  
 
-  const getConnection = async () => {
-    const res = await axios.get(BASE_URL + "user/connections", {
-      withCredentials: true,
-    });
-    dispatch(addConnection(res?.data?.data));
+  const fetchConnection = async () => {
+    try {
+      const res = await getConnection();
+      dispatch(addConnection(res?.data?.data));
+    } catch (err) {
+      if (err.response?.status === 401) {
+        navigate("/login");
+      } else {
+        console.error("Failed to fetch connections:", err);
+      }
+    }
   };
 
   useEffect(() => {
-    getConnection();
+    fetchConnection();
   }, []);
 
   const handleRemoveConnection = async (userId) => {
-    try{
-       await axios.delete(`${BASE_URL}request/connection/${userId}`, {withCredentials:true});
-       dispatch(removeConnection(userId))
-    }catch(err){
-      console.log(err.message)
+    try {
+      await deleteConnection(userId);
+      dispatch(removeConnection(userId));
+      setToast({message : "Connection removed" , type:"success"})
+    } catch (err) {
+      console.error("Failed to remove connection:", err);
+
+      if (err.response?.status === 401) {
+        navigate("/login");
+      } else {
+           setToast({message : err?.response?.data?.message || "Something went wrong" , type:"failed"});
+      }
     }
-  }
+  };
 
   if (!connections)
     return (
@@ -136,7 +151,10 @@ const Connections = () => {
                   className="dropdown-content menu bg-base-100 rounded-box z-[1] w-48 p-2 shadow-xl border border-white/5"
                 >
                   <li>
-                    <a className="text-error hover:bg-error/10 font-medium" onClick={() => handleRemoveConnection(data._id)}>
+                    <a
+                      className="text-error hover:bg-error/10 font-medium"
+                      onClick={() => handleRemoveConnection(data._id)}
+                    >
                       Remove connection
                     </a>
                   </li>
@@ -146,6 +164,7 @@ const Connections = () => {
           );
         })}
       </div>
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };

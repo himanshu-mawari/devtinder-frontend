@@ -1,8 +1,7 @@
 import { useState } from "react";
 import Toast from "./Toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+import { getChangePassword } from "../services/userService";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -10,9 +9,7 @@ const ChangePassword = () => {
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [error, setError] = useState("");
-  const [toast, setToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
+  const [toast, setToast] = useState(null);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -23,19 +20,18 @@ const ChangePassword = () => {
         return;
       }
 
-      const user = await axios.patch(
-        BASE_URL + "profile/reset-password",
-        { oldPassword, newPassword },
-        { withCredentials: true },
-      );
-      setToast(true);
-      setToastMessage(user.data.message);
-      setToastType("success");
+      if (newPassword.length < 6) {
+        setError("New password length minimum be 6");
+        return;
+      }
+
+      const user = await getChangePassword(oldPassword, newPassword);
+      setToast({ messagge: user.data.message, type: "success" });
       setTimeout(() => {
         setToast(false);
       }, 2000);
-      setOldPassword("")
-      setNewPassword("")
+      setOldPassword("");
+      setNewPassword("");
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong");
     }
@@ -69,7 +65,6 @@ const ChangePassword = () => {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-50 hover:opacity-100 transition-opacity"
                 onClick={() => {
                   setShowOld(true);
-                  setTimeout(() => setShowOld(false), 3000);
                 }}
               >
                 {showOld ? <FaEye /> : <FaEyeSlash />}
@@ -93,7 +88,6 @@ const ChangePassword = () => {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xl opacity-50 hover:opacity-100 transition-opacity"
                 onClick={() => {
                   setShowNew(true);
-                  setTimeout(() => setShowNew(false), 3000);
                 }}
               >
                 {showNew ? <FaEye /> : <FaEyeSlash />}
@@ -115,7 +109,7 @@ const ChangePassword = () => {
           </form>
         </div>
       </div>
-      {toast && <Toast message={toastMessage} type={toastType} />}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };

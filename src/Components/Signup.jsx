@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {signUp} from "../services/authService"
 
 const Signup = () => {
   const [email, setEmailId] = useState("");
@@ -18,11 +17,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const handleSignup = async () => {
     try {
-      const user = await axios.post(
-        BASE_URL + "signup",
-        { firstName, lastName, email, password },
-        { withCredentials: true },
-      );
+      const user = await signUp(firstName, lastName, email, password );
       dispatch(addUser(user?.data?.data));
       navigate("/profile");
     } catch (err) {

@@ -1,5 +1,3 @@
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import {
   addConnectionRequests,
@@ -7,15 +5,14 @@ import {
 } from "../utils/requestSlice";
 import { useDispatch, useSelector } from "react-redux";
  import { useNavigate } from "react-router-dom";
+ import {connectionRequest , connectionRequestReview} from "../services/requestService"
 
 const RequestPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let requests = useSelector((store) => store?.request);
   const receivedRequests = async () => {
-    const res = await axios.get(BASE_URL + "user/requests/received", {
-      withCredentials: true,
-    });
+    const res = await connectionRequest();
     dispatch(addConnectionRequests(res?.data?.data));
   };
 
@@ -25,11 +22,7 @@ const RequestPage = () => {
 
   const handleReviewRequest = async (status, reqId) => {
     try {
-      await axios.post(
-        BASE_URL + `request/review/${status}/${reqId}`,
-        {},
-        { withCredentials: true },
-      );
+      await connectionRequestReview(status , reqId);
       dispatch(removeConnectionRequests(reqId));
     } catch (err) {
       console.error(err.message);

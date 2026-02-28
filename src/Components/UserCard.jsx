@@ -1,19 +1,14 @@
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
 import { removeFeed } from "../utils/feedSlice";
 import { useDispatch } from "react-redux";
+import { connectionRequestSend } from "../services/requestService";
 
 const UserCard = ({ userData }) => {
   const { firstName, bio, age, profilePicture, skills, _id } = userData;
   const dispatch = useDispatch();
-  console.log(userData)
+  console.log(userData);
 
   const handleSendRequest = async (status, userId) => {
-    await axios.post(
-      BASE_URL + `request/send/${status}/${userId}`,
-      {},
-      { withCredentials: true },
-    );
+    await connectionRequestSend(status, userId);
     dispatch(removeFeed(userId));
   };
 

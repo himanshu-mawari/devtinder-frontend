@@ -1,20 +1,18 @@
-import axios from "axios";
 import { useState } from "react";
-import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Toast from "../components/Toast";
+import { login } from "../services/authService";
 
 const Login = () => {
   const [email, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [visibility, setVisibility] = useState(false);
-  const [toast, setToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
+  const [toast, setToast] = useState(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,32 +24,22 @@ const Login = () => {
         return;
       }
 
-      const user = await axios.post(
-        BASE_URL + "login",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true },
-      );
+      const user = await login(email, password);
       dispatch(addUser(user.data.data));
 
-      setToast(true);
-      setToastMessage(user.data.message);
-      setToastType("success");
+      setToast({ message: user.data.message, type: "success" });
+
       setTimeout(() => {
         setToast(false);
         navigate("/");
       }, 500);
     } catch (err) {
-      const message =
+      const errorMessage =
         err.response && err.response.data && err.response.data.message
           ? err.response.data.message
           : "Something went wrong";
 
-      setToastMessage(message);
-      setToastType("failed");
-      setToast(true);
+      setToast({ message: errorMessage, type: "failed" });
       setTimeout(() => setToast(false), 2000);
     }
   };
@@ -122,7 +110,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {toast && <Toast message={toastMessage} type={toastType} />}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </div>
   );
 };

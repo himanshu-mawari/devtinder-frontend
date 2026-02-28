@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import UserCard from "../components/UserCard";
-import { BASE_URL } from "../utils/constants";
-import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { checkImageUrl } from "../utils/imageCheck";
 import Toast from "../components/Toast";
+import {getEditProfile , deleteSkill} from "../services/userService"
 
 export const EditProfile = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,12 +14,11 @@ export const EditProfile = () => {
   const [profilePicture, setProfilePicture] = useState("");
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState([]);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
+
   const userData = useSelector((store) => store?.user);
 
   const [skillInput, setSkillInput] = useState("");
-  const [toast, setToast] = useState(false);
+  const [toast, setToast] = useState(null);
   const [error, setError] = useState({});
   const dispatch = useDispatch();
 
@@ -32,7 +30,7 @@ export const EditProfile = () => {
     setGender(userData?.gender || "");
     setProfilePicture(userData?.profilePicture || "");
     setSkills(userData?.skills || []);
-    setBio(userData?.bio || []);
+    setBio(userData?.bio || "");
   }, [userData]);
 
   const saveProfile = async () => {
@@ -43,6 +41,9 @@ export const EditProfile = () => {
     if (!ok) newErrors.profilePicture = "Image URL is broken";
     if (age && age < 18) newErrors.age = "You must be at least 18 yrs old";
     if (age > 70) newErrors.age = "Your age must be between 18 - 70";
+    if(!firstName) newErrors.firstName = "First name is required";
+    if(!lastName) newErrors.firstName = "last name is required";
+    
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);
@@ -50,27 +51,20 @@ export const EditProfile = () => {
     }
 
     try {
-      const res = await axios.patch(
-        BASE_URL + "profile/edit",
-        { firstName, lastName, profilePicture, age, gender, bio, skills },
-        { withCredentials: true },
-      );
+      const res = await getEditProfile(firstName, lastName, profilePicture, age, gender, bio, skills )
 
       dispatch(addUser(res?.data?.data));
 
-      setToast(true);
-      setToastMessage(res?.data?.message || "Profile updated successfully");
-      setToastType("success");
+      setToast({message : res?.data?.message || "Profile updated successfully" , type: "success"});
       setTimeout(() => setToast(false), 2000);
     } catch (err) {
-      const message =
+      const errorMessage =
         err.response && err.response.data && err.response.data.message
           ? err.response.data.message
           : "Something went wrong";
 
-      setToast(true);
-      setToastMessage(message);
-      setToastType("failed");
+      setToast({message : errorMessage , type : "failed"});
+
       setTimeout(() => setToast(false), 3000);
     }
   };
@@ -99,14 +93,10 @@ export const EditProfile = () => {
     try {
       setSkills((prev) => prev.filter((skill) => skill !== skillToRemove));
 
-      await axios.patch(
-        BASE_URL + "profile/remove/skill",
-        { removeSkill: skillToRemove },
-        { withCredentials: true },
-      );
+    await deleteSkill(skillToRemove)
     } catch (err) {
       setSkills(previousSkill);
-      setError(err.message);
+      setError({general :  err?.response?.data?.message });
     }
   };
 
@@ -181,7 +171,7 @@ export const EditProfile = () => {
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
-          {gender === "" && <p class="text-xs mt-1 text-red-500">Please select a gender</p>}
+          {gender === "" && <p className="text-xs mt-1 text-red-500">Please select a gender</p>}
 
           <label className="label">
             <span className="label-text text-sm">Skills: </span>
@@ -257,7 +247,7 @@ export const EditProfile = () => {
             }}
           />
         </div>
-        {toast && <Toast message={toastMessage} type={toastType}/>}
+        {toast && <Toast message={toast.message} type={toast.type}/>}
       </div>
     </>
   );
