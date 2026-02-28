@@ -7,8 +7,8 @@ Frontend for **DevTinder**, a developer networking platform designed to help dev
 
 ## 💡 Why DevTinder?
 
-DevTinder helps developers discover and connect with peers efficiently, showcasing practical skills in building a modern, scalable, and maintainable frontend application.  
-It highlights real-world React, Redux, and API integration expertise — exactly what employers look for in a frontend developer.
+- DevTinder helps developers find and connect with peers efficiently.
+- It provides a platform to share profiles, send connection requests, and discover other developers in a simple, modern interface  
 
 ## 🛠️ Tech Stack
 
