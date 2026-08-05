@@ -1,8 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* optional global styling */
-body {
-  @apply font-sans;
+:root {
+  /* Colors */
+  --color-background: #0B1120;
+  --color-surface: #111827;
+  --color-surface-hover: #1F2937;
+
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+
+  --color-accent: #7C3AED;
+
+  --color-border: #374151;
+
+  --color-text: #F9FAFB;
+  --color-text-muted: #94A3B8;
+
+  --gradient-logo: linear-gradient(135deg, oklch(58% .21 272), oklch(68% .16 320))
+}
+
+:root.light {
+  /* Colors */
+  --color-background: #fafcf8;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F1F5F9;
+
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+
+  --color-accent: #7C3AED;
+
+  --color-border: #E5E7EB;
+
+  --color-text: #250317;
+  --color-text-muted: #64748B;
+  
+  --gradient-logo: linear-gradient(135deg, oklch(58% .21 272), oklch(68% .16 320))
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+    background: var(--color-background);
+    color: var(--color-text);
+  }
 }
