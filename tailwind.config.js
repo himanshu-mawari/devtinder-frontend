@@ -8,12 +8,22 @@ export default {
         card: "var(--color-card)",
 
         primary: "var(--color-primary)",
+        "primary-foreground": "var(--color-primary-foreground)",
+        secondary: "var(--color-secondary)",
+        "secondary-foreground": "var(--color-secondary-foreground)",
+
         accent: "var(--color-accent)",
+        "accent-foreground": "var(--color-accent-foreground)",
 
         "sidebar-border": "var(--sidebar-border)",
 
+        border: "var(--border)",
+
         text: "var(--color-text)",
         muted: "var(--color-text-muted)",
+        "muted-foreground": "var(--muted-foreground)",
+
+        input: "var(--color-input)"
       },
 
       backgroundImage: {
@@ -28,6 +38,10 @@ export default {
         sans: ["DM Sans", "sans-serif"],
         heading: ["Space Grotesk", "sans-serif"],
       },
+
+      screens:{
+        sidebar: "900px"
+      }
     },
   },
 };

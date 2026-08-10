@@ -4,8 +4,8 @@
   import { Outlet } from "react-router-dom";
 const AppLayout = () => {
   return (
-    <div className="flex min-h-screen ">
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-sidebar border-sidebar-border md:block">
+    <div className="flex min-h-screen  ">
+      <aside className="hidden w-64 shrink-0 border-r  bg-sidebar border-sidebar-border [@media(min-width:900px)]:block">
         <DesktopSidebar />
       </aside>
 
@@ -15,13 +15,12 @@ const AppLayout = () => {
         </header>
 
         <main className="flex-1 ">
-          <div className="px-4 pt-6 pb-28 md:ml-64 md:px-8 md:pt-8 md:pb-12 max-w-5xl">
-
-          <Outlet />
-          </div>
+     <div className="px-4 pt-4 pb-28 sm:px-6 md:p-8 2xl:p-6 w-full max-w-2xl xl:max-w-3xl mx-auto">
+    <Outlet />
+  </div>
         </main>
 
-        <footer className="md:hidden">
+        <footer className="sidebar:hidden">
           <MobileBottomBar />
         </footer>
       </div>

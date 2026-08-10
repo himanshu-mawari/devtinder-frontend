@@ -34,7 +34,7 @@ const DesktopSidebar = () => {
       <div className="mt-auto border border-sidebar-border bg-background rounded-xl">
         <button className="flex items-center p-2.5 gap-3">
           <span
-            className=" rounded-full text-sm w-12 h-12 flex justify-center
+            className=" rounded-full text-sm text-white w-12 h-12 flex justify-center
            items-center bg-logo font-semibold font-heading "
           >
             HM

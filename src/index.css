@@ -5,58 +5,84 @@
 @tailwind utilities;
 
 :root {
-  /* Layout */
-  --radius: 0.875rem;
 
-  /* Backgrounds */
   --color-background: #090c1c;
   --color-sidebar: #050615;
-  --color-card: #1a2235;
+  --color-card: #13182C;
 
-  /* Interactive States */
   --color-surface-hover: #1f2937;
 
-  /* Brand */
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-accent: #7c3aed;
-  --gradient-logo: linear-gradient(
-    135deg,
-    oklch(58% .21 272),
-    oklch(68% .16 320)
-  );
+  --color-primary: #5367f4;
+  --color-primary-foreground: #fafcff;
 
-  /* Typography */
+  --color-secondary: #1e253f;
+  --color-secondary-foreground: #eceef4;
+
+  --color-accent: #242d53;
+  --color-accent-foreground: #f4f5f9;
+
+  --gradient-logo: linear-gradient(135deg,
+      #5367f4,
+      #c374d5);
+
   --color-text: #f9fafb;
   --color-text-muted: #94a3b8;
 
-  /* Borders */
+  --muted-foreground: #9ca4b8;
+
+  --color-input: #262c45;
+
   --sidebar-border: #1f253c;
+
+  
+  
+
+  --border: #2b314a;
 }
 
 :root.light {
-  /* Layout */
-  --radius: 0.875rem;
-
+  /* Page */
   --color-background: #f8fafc;
-  --color-sidebar: #ffffff;
-  --color-card: #f1f5f9;
 
-  --color-surface-hover: #e2e8f0;
+  /* Sidebar — slightly different from page */
+  --color-sidebar: #f1f5f9;
 
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-accent: #7c3aed;
+  /* Cards / elevated surfaces */
+  --color-card: #ffffff;
+
+  /* Hover */
+  --color-surface-hover: #e8edf5;
+
+  /* Primary */
+  --color-primary: #5367f4;
+  --color-primary-foreground: #ffffff;
+
+  /* Secondary */
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #334155;
+
+  /* Accent */
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #334155;
+
+  /* Logo */
   --gradient-logo: linear-gradient(
     135deg,
     oklch(58% .21 272),
     oklch(68% .16 320)
   );
 
+  /* Text */
   --color-text: #0f172a;
   --color-text-muted: #64748b;
+  --muted-foreground: #475569;
 
+  /* Input */
+  --color-input: #f1f5f9;
+
+  /* Borders */
   --sidebar-border: #e2e8f0;
+  --border: #e2e8f0;
 }
 
 @layer base {
