@@ -90,5 +90,6 @@
     @apply font-sans;
     background: var(--color-background);
     color: var(--color-text);
+    font-family: var(--font-sans);
   }
 }
