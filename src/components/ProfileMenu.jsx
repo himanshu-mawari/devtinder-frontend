@@ -2,9 +2,14 @@ import React from "react";
 import { Moon, LogOut, User } from "lucide-react";
 import { getProfileInitials } from "../utils/helpers";
 import { useGetProfileQuery } from "../services/profileApi";
+import { useLogoutMutation } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
 
 const ProfileMenu = () => {
   const { data: user, isLoading } = useGetProfileQuery();
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -12,7 +17,10 @@ const ProfileMenu = () => {
   const { firstName, lastName, profilePicture } = user;
   const name = firstName + " " + lastName;
 
-  console.log(user);
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   return (
     <div
@@ -51,7 +59,10 @@ const ProfileMenu = () => {
           <span>Theme</span>
         </button>
 
-        <button className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-destructive hover:bg-destructive/10 transition-colors">
+        <button
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-destructive hover:bg-destructive/10 transition-colors"
+          onClick={() => handleLogout()}
+        >
           <LogOut className="h-4 w-4" />
           <span>Log out</span>
         </button>
