@@ -3,9 +3,11 @@ import { Globe, Check, X } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { getProfileInitials } from "../utils/helpers";
 import { Link } from "react-router-dom";
+import { useSendRequestMutation } from "../services/connectionApi";
 
 const DeveloperCard = ({ user }) => {
   const {
+    _id,
     firstName,
     lastName,
     profilePicture,
@@ -18,7 +20,17 @@ const DeveloperCard = ({ user }) => {
     portfolioUrl,
   } = user;
   const name = firstName + " " + lastName;
+  const [sendRequest] = useSendRequestMutation();
 
+  const handleSendRequest = async (status, id) => {
+    try {
+      const data = { status, id };
+
+      await sendRequest(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <article className="  w-full border border-border bg-card p-5 sm:p-6 md:p-8 rounded-3xl mt-5   xl:px-10 xl:py-7 2xl:mt-10">
       <div className="flex gap-4 md:gap-6 items-start mb-4">
@@ -76,7 +88,7 @@ const DeveloperCard = ({ user }) => {
 
       <div className="mt-6 space-y-4 md:space-y-5 2xl:space-y-4">
         {/* STACK */}
-        {skills ? (
+        {skills.length ? (
           <div>
             <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
               Stack
@@ -96,10 +108,10 @@ const DeveloperCard = ({ user }) => {
           ""
         )}
 
-        {/* LOOKING FOR */}
+        {/* Interests*/}
         <div className="pt-1 ">
           <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
-            Looking for
+            Interests
           </h3>
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             {tags.map((line) => (
@@ -129,7 +141,7 @@ const DeveloperCard = ({ user }) => {
               className="flex items-center gap-1.5 transition-colors hover:underline"
             >
               <Globe className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-              <span>{portfolioUrl }</span>
+              <span>{portfolioUrl}</span>
             </Link>
           </div>
         </div>
@@ -139,6 +151,7 @@ const DeveloperCard = ({ user }) => {
           <button
             type="button"
             className="flex flex-1 md:flex-initial md:w-64 items-center justify-center gap-2 rounded-xl bg-background px-4 py-2.5 md:py-3 text-sm md:text-base font-semibold text-foreground transition-transform duration-100 ease-out cursor-pointer select-none active:scale-95 border border-input hover:bg-accent hover:text-accent-foreground xl:max-w-52 "
+            onClick={() => handleSendRequest("ignored", _id)}
           >
             <X className="w-4 h-4 md:w-5 md:h-5" />
             <span>Pass</span>
@@ -147,6 +160,7 @@ const DeveloperCard = ({ user }) => {
           <button
             type="button"
             className="flex flex-1 md:flex-initial md:w-64 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 md:py-3 text-sm md:text-base font-semibold text-primary-foreground hover:opacity-90 transition-transform duration-100 ease-out cursor-pointer select-none active:scale-95 shadow-sm  xl:max-w-52 "
+            onClick={() => handleSendRequest("interested", _id)}
           >
             <Check className="w-4 h-4 md:w-5 md:h-5" />
             <span>Connect</span>
