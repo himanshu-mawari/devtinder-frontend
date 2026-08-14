@@ -3,11 +3,12 @@ import { Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Discover from "./pages/Discover";
-import Connections from "./pages/Connections";
+import Connection from "./pages/Connections";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -27,11 +28,46 @@ const router = createBrowserRouter([
   {
     element: <AppLayout />,
     children: [
-      { index: true, element: <Navigate to="/discover" /> },
-      { path: "/discover", element: <Discover /> },
-      { path: "/connections", element: <Connections /> },
-      { path: "/messages", element: <Messages /> },
-      { path: "/profile", element: <Profile /> },
+      {
+        index: true,
+        element: (
+          <ProtectedRoute>
+            <Navigate to="/discover" />{" "}
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/discover",
+        element: (
+          <ProtectedRoute>
+            <Discover />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/connections",
+        element: (
+          <ProtectedRoute>
+            <Connections />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/messages",
+        element: (
+          <ProtectedRoute>
+            <Messages />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

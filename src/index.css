@@ -34,8 +34,15 @@
 
   --sidebar-border: #1f253c;
 
-  
-  
+  --sidebar-accent: #0C1023;
+  --sidebar-accent-hover: #181d37;
+
+  --color-ring: #5367f4;
+
+  --color-popover: #0e1226;
+  --color-popover-foreground: #f4f5f9;
+
+  --color-destructive: 239 68 68;
 
   --border: #2b314a;
 }
@@ -66,11 +73,9 @@
   --color-accent-foreground: #334155;
 
   /* Logo */
-  --gradient-logo: linear-gradient(
-    135deg,
-    oklch(58% .21 272),
-    oklch(68% .16 320)
-  );
+  --gradient-logo: linear-gradient(135deg,
+      oklch(58% .21 272),
+      oklch(68% .16 320));
 
   /* Text */
   --color-text: #0f172a;
@@ -83,6 +88,20 @@
   /* Borders */
   --sidebar-border: #e2e8f0;
   --border: #e2e8f0;
+  --sidebar-accent: #e2e8f0;
+
+  /* Sidebar items (Hover state) */
+  --sidebar-accent-hover: #cbd5e1;
+
+  /* Focus rings */
+  --color-ring: #5367f4;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #090d16;
+
+   --color-destructive: 239 68 68;
+
+
 }
 
 @layer base {
@@ -91,5 +110,6 @@
     background: var(--color-background);
     color: var(--color-text);
     font-family: var(--font-sans);
+    overflow: hidden;
   }
 }
