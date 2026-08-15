@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { getProfileInitials } from "../utils/helpers";
-import { dummyPending, dummyMatched } from "../data/connectionPage";
 import { EllipsisVertical } from "lucide-react";
 import {
   useGetConnectionsQuery,
   useGetConnectionRequestsQuery,
+  useReviewConnectionRequestsMutation,
 } from "../services/connectionApi";
 
 const Connections = () => {
@@ -18,11 +18,20 @@ const Connections = () => {
     useGetConnectionsQuery();
   const { data: connectionRequests, isLoading: isRequestsLoading } =
     useGetConnectionRequestsQuery();
+  const [reviewConnectionRequests] = useReviewConnectionRequestsMutation();
 
-  console.log(connectionRequests);
+  const handleRequest = async (action, requestId) => {
+    try {
+      const data = {action , requestId}
+      await reviewConnectionRequests(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   return (
-    <>
-      <header>
+    <div className="flex flex-col h-full overflow-hidden">
+      <header className="shrink-0">
         <div>
           <h1 className="font-heading text-2xl md:text-3xl 2xl:text-2xl  font-semibold md:font-bold tracking-tight">
             Connections
@@ -33,7 +42,7 @@ const Connections = () => {
         </div>
       </header>
 
-      <article className="mt-6 mb-4">
+      <article className="mt-6 mb-4 shrink-0">
         <div className="flex items-center gap-3 text-base font-semibold tracking-tight ">
           <button
             className={` text-[12px] ${activeTab === "Pending" ? "text-text" : "text-muted-foreground"} flex gap-1  transition-color hover:text-text uppercase`}
@@ -63,14 +72,14 @@ const Connections = () => {
         </div>
       </article>
 
-      <main className="flex flex-col gap-2.5">
+      <main className="flex flex-col gap-3 mb-28">
         {activeTab === "Pending" &&
           (isRequestsLoading ? (
             <p>loading...</p>
           ) : (
             <>
               {connectionRequests.map((data) => (
-                <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start gap-4">
+                <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start md:items-center gap-4">
                   {data?.fromUserId?.profilePicture ? (
                     <img
                       src={data?.fromUserId?.profilePicture}
@@ -89,22 +98,30 @@ const Connections = () => {
                       )}
                     </span>
                   )}
-                  <div className="flex flex-col">
-                    <p className="font-semibold  text-sm truncate">
-                      {data?.fromUserId?.firstName +
-                        " " +
-                        data?.fromUserId?.lastName}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {data?.fromUserId?.role}
-                    </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+                    <div>
+                      <p className="font-semibold  text-sm truncate">
+                        {data?.fromUserId?.firstName +
+                          " " +
+                          data?.fromUserId?.lastName}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {data?.fromUserId?.role}
+                      </p>
+                    </div>
 
-                    <div className="flex gap-2 mt-3">
-                      <button className="bg-primary text-primary-foreground h-8 px-3  text-xs rounded-xl  font-medium transition-all active:scale-95 transform-gpu shadow hover:opacity-90">
+                    <div className="flex gap-2 mt-3 md:mt-0">
+                      <button
+                        className="bg-primary text-primary-foreground h-8 px-3  text-xs rounded-xl  font-medium transition-all active:scale-95 transform-gpu shadow hover:opacity-90"
+                        onClick={() => handleRequest("accepted" , data._id)}
+                      >
                         Accept
                       </button>
-                      <button className="bg-sidebar-accent text-text h-8 px-3 rounded-xl   text-xs font-medium transition-all active:scale-95 transform-gpu hover:bg-accent hover:text-accent-foreground shadow-sm">
-                        Ignore
+                      <button
+                        className="bg-sidebar-accent text-text h-8 px-3 rounded-xl   text-xs font-medium transition-all active:scale-95 transform-gpu hover:bg-accent hover:text-accent-foreground shadow-sm"
+                        onClick={() => handleRequest("rejected" , data._id)}
+                      >
+                        Reject
                       </button>
                     </div>
                   </div>
@@ -113,7 +130,6 @@ const Connections = () => {
             </>
           ))}
 
-        {/* Avator Name Location One tag(optional) */}
         {activeTab === "Connected" &&
           (isConnectionsLoading ? (
             <p>loading...</p>
@@ -150,7 +166,7 @@ const Connections = () => {
             </>
           ))}
       </main>
-    </>
+    </div>
   );
 };
 

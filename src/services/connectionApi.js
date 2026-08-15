@@ -11,18 +11,30 @@ export const connectionApi = baseApi.injectEndpoints({
     }),
     getConnections: builder.query({
       query: () => ({
-        url: "/user/connections",
+        url: "user/connections",
       }),
-      transformResponse: (response) => response?.data
+      providesTags:["Connection"],
+      transformResponse: (response) => response?.data,
     }),
-    getConnectionRequests: builder.query(
-      {
-        query: () => ({
-          url: "/user/requests/received"
-        }),
-        transformResponse: (response) => response?.data
-      }
-    )
+    getConnectionRequests: builder.query({
+      query: () => ({
+        url: "user/requests/received",
+      }),
+      providesTags:["ConnectionRequests"],
+      transformResponse: (response) => response?.data,
+    }),
+    reviewConnectionRequests: builder.mutation({
+      query: ({ action, requestId }) => ({
+        url: `request/review/${action}/${requestId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags:["Connection" , "ConnectionRequests"]
+    }),
   }),
 });
-export const { useSendRequestMutation , useGetConnectionsQuery , useGetConnectionRequestsQuery} = connectionApi;
+export const {
+  useSendRequestMutation,
+  useGetConnectionsQuery,
+  useGetConnectionRequestsQuery,
+  useReviewConnectionRequestsMutation,
+} = connectionApi;
