@@ -1,7 +1,7 @@
 import React from "react";
 import { Moon, LogOut, User } from "lucide-react";
 import { getProfileInitials } from "../utils/helpers";
-import { useGetProfileQuery } from "../services/profileApi";
+import { useGetProfileQuery } from "../services/userApi";
 import { useLogoutMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const ProfileMenu = () => {
     return <p>Loading...</p>;
   }
 
-  const { firstName, lastName, profilePicture } = user;
+  const { firstName, lastName, profilePicture, username  } = user;
   const name = firstName + " " + lastName;
 
   const handleLogout = async () => {
@@ -35,7 +35,7 @@ const ProfileMenu = () => {
         {profilePicture ? (
           <img
             src={profilePicture}
-            className="w-10 h-10 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover object-top"
           />
         ) : (
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-logo text-white font-semibold">
@@ -44,10 +44,10 @@ const ProfileMenu = () => {
         )}
         <div className="flex flex-col truncate">
           <h2 className="text-sm font-semibold leading-none text-foreground truncate">
-            Himanshu Mawari
+{name}
           </h2>
           <p className="text-xs text-muted-foreground truncate mt-1">
-            @hmawari21
+            @{username}
           </p>
         </div>
       </div>

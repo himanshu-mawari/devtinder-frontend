@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getProfileInitials } from "../utils/helpers";
-import { useGetProfileQuery } from "../services/profileApi";
+import { useGetProfileQuery } from "../services/userApi";
 import ProfileMenu from "./ProfileMenu";
 
 const MobileTopbar = () => {
@@ -11,6 +11,7 @@ const MobileTopbar = () => {
   const name = firstName + " " + lastName;
 
   const toggleProfileMenu = () => setIsProfileMenuOpen((prev) => !prev);
+  console.log("mobiletopbar :" + profilePicture)
   return (
     <>
       <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/85 px-4 backdrop-blur-md transition-all">
@@ -25,7 +26,7 @@ const MobileTopbar = () => {
           onClick={toggleProfileMenu}
         >
           {profilePicture ? (
-            <img src={profilePicture} className="w-10 h-10 rounded-full object-cover" />
+            <img src={profilePicture} className="w-10 h-10 rounded-full object-cover object-top" />
           ) : (
             <button
               type="button"

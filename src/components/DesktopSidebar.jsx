@@ -1,22 +1,22 @@
-import {useState} from "react";
+import { useState } from "react";
 import { NAV_ITEMS } from "../utils/constants";
 import { NavLink } from "react-router-dom";
-import { useGetProfileQuery } from "../services/profileApi";
-import {getProfileInitials} from "../utils/helpers";
+import { useGetProfileQuery } from "../services/userApi";
+import { getProfileInitials } from "../utils/helpers";
 import ProfileMenu from "./ProfileMenu";
 
 const DesktopSidebar = () => {
   const desktopNavItems = NAV_ITEMS.filter((item) => !item.mobileOnly);
-  const [isProfileMenuOpen , setIsProfileMenuOpen] = useState(false)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { data: user, isLoading } = useGetProfileQuery();
   if (isLoading) {
     return <p>loading...</p>;
   }
 
-  const {firstName , lastName , username} = user;
-  const name = firstName + " "+ lastName
+  const { firstName, lastName, username, profilePicture } = user;
+  const name = firstName + " " + lastName;
 
-  const toggleProfileMenu = () =>setIsProfileMenuOpen((prev) => !prev)
+  const toggleProfileMenu = () => setIsProfileMenuOpen((prev) => !prev);
 
   return (
     <div className="flex flex-col min-h-screen p-4">
@@ -32,7 +32,10 @@ const DesktopSidebar = () => {
         {desktopNavItems.map((item) => {
           const Icon = item.icon;
           return (
-            <NavLink to={item.id} className="flex flex-col py-0.5 font-medium rounded-full focus-visible:ring-2 ">
+            <NavLink
+              to={item.id}
+              className="flex flex-col py-0.5 font-medium rounded-full focus-visible:ring-2 "
+            >
               {({ isActive }) => {
                 return (
                   <>
@@ -50,19 +53,32 @@ const DesktopSidebar = () => {
         })}
       </nav>
       <div className="relative mt-auto border border-sidebar-border bg-sidebar-accent  hover:bg-sidebar-accent-hover focus-within:ring-2 focus-within:ring-ring rounded-xl">
-        <button className="flex items-center w-full p-2.5 gap-3 focus:outline-none" onClick={toggleProfileMenu}>
-          <span
-            className=" rounded-full text-sm text-white w-12 h-12 flex justify-center
+        <button
+          className="flex items-center w-full p-2.5 gap-3 focus:outline-none"
+          onClick={toggleProfileMenu}
+        >
+          {profilePicture ? (
+            <img
+              src={profilePicture}
+              className=" w-12 h-12 rounded-full object-cover object-top"
+              placeholder="profile picture"
+            />
+          ) : (
+            <span
+              className=" rounded-full text-sm text-white w-12 h-12 flex justify-center
            items-center bg-logo font-semibold font-heading "
-          >
-           { getProfileInitials(name.toUpperCase())}
-          </span>
+            >
+              {getProfileInitials(name.toUpperCase())}
+            </span>
+          )}
           <span className="flex flex-col items-start">
-            <span className="text-sm font-semibold">{firstName} {lastName}</span>
+            <span className="text-sm font-semibold">
+              {firstName} {lastName}
+            </span>
             <span className="text-xs text-muted">@{username}</span>
           </span>
         </button>
-        {isProfileMenuOpen && <ProfileMenu  />}
+        {isProfileMenuOpen && <ProfileMenu />}
       </div>
     </div>
   );
