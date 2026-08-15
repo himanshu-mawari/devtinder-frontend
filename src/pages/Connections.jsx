@@ -2,17 +2,24 @@ import { useState } from "react";
 import { getProfileInitials } from "../utils/helpers";
 import { dummyPending, dummyMatched } from "../data/connectionPage";
 import { EllipsisVertical } from "lucide-react";
+import {
+  useGetConnectionsQuery,
+  useGetConnectionRequestsQuery,
+} from "../services/connectionApi";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
 
-  const name = dummyPending[0].firstName + " " + dummyPending[0].lastName;
-  const role = dummyPending[0].role;
-  const location = dummyPending[0].location;
-
   const handleActiveTab = (tabName) => {
     setActiveTab(tabName);
   };
+
+  const { data: connections, isLoading: isConnectionsLoading } =
+    useGetConnectionsQuery();
+  const { data: connectionRequests, isLoading: isRequestsLoading } =
+    useGetConnectionRequestsQuery();
+
+  console.log(connectionRequests);
   return (
     <>
       <header>
@@ -29,81 +36,119 @@ const Connections = () => {
       <article className="mt-6 mb-4">
         <div className="flex items-center gap-3 text-base font-semibold tracking-tight ">
           <button
-            className={` text-[12px] ${activeTab === "Pending" ? "text-text" : "text-muted-foreground"}  transition-color hover:text-text uppercase`}
+            className={` text-[12px] ${activeTab === "Pending" ? "text-text" : "text-muted-foreground"} flex gap-1  transition-color hover:text-text uppercase`}
             onClick={() => handleActiveTab("Pending")}
           >
-            Pending ({dummyPending.length})
+            Pending
+            {isRequestsLoading ? (
+              <p>loading...</p>
+            ) : (
+              <p> ({connectionRequests.length})</p>
+            )}
           </button>
 
           <span className="text-muted font-light">/</span>
 
           <button
-            className={` text-[12px] ${activeTab === "Connected" ? "text-text " : "text-muted-foreground"} hover:text-text transition-colors uppercase`}
+            className={` text-[12px] ${activeTab === "Connected" ? "text-text " : "text-muted-foreground"} flex gap-1 hover:text-text transition-colors uppercase`}
             onClick={() => handleActiveTab("Connected")}
           >
-            Connected (5)
+            Connected
+            {isConnectionsLoading ? (
+              <p>loading...</p>
+            ) : (
+              <p> ({connections.length})</p>
+            )}
           </button>
         </div>
       </article>
 
-      <main className="flex flex-col gap-4">
-        {activeTab === "Pending" && (
-          <>
-            {dummyPending.map((data) => (
-              <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start gap-4">
-                <span
-                  className="flex-shrink-0 flex justify-center items-center text-sm font-heading font-bold tracking-tight text-primary-foreground w-14 h-14 rounded-full"
-                  style={{ background: "var(--gradient-logo)" }}
-                >
-                  {getProfileInitials(data.firstName + " " + data.lastName)}
-                </span>
+      <main className="flex flex-col gap-2.5">
+        {activeTab === "Pending" &&
+          (isRequestsLoading ? (
+            <p>loading...</p>
+          ) : (
+            <>
+              {connectionRequests.map((data) => (
+                <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start gap-4">
+                  {data?.fromUserId?.profilePicture ? (
+                    <img
+                      src={data?.fromUserId?.profilePicture}
+                      placeholder="profile picture"
+                      className="w-14 md:w-16 md:h-16 h-14 rounded-full object-cover object-top"
+                    />
+                  ) : (
+                    <span
+                      className="flex-shrink-0 flex justify-center items-center text-sm font-heading font-bold tracking-tight text-primary-foreground w-14 md:w-16 md:h-16 h-14  rounded-full"
+                      style={{ background: "var(--gradient-logo)" }}
+                    >
+                      {getProfileInitials(
+                        data?.fromUserId?.firstName +
+                          " " +
+                          data?.fromUserId?.lastName,
+                      )}
+                    </span>
+                  )}
+                  <div className="flex flex-col">
+                    <p className="font-semibold  text-sm truncate">
+                      {data?.fromUserId?.firstName +
+                        " " +
+                        data?.fromUserId?.lastName}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {data?.fromUserId?.role}
+                    </p>
 
-                <div className="flex flex-col">
-                  <p className="font-semibold  text-sm truncate">
-                    {data.firstName + " " + data.lastName}
-                  </p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {data.role}
-                  </p>
-
-                  <div className="flex gap-2 mt-3">
-                    <button className="bg-primary text-primary-foreground h-8 px-3  text-xs rounded-xl  font-medium transition-all active:scale-95 transform-gpu shadow hover:opacity-90">
-                      Accept
-                    </button>
-                    <button className="bg-sidebar-accent text-text h-8 px-3 rounded-xl   text-xs font-medium transition-all active:scale-95 transform-gpu hover:bg-accent hover:text-accent-foreground shadow-sm">
-                      Ignore
-                    </button>
+                    <div className="flex gap-2 mt-3">
+                      <button className="bg-primary text-primary-foreground h-8 px-3  text-xs rounded-xl  font-medium transition-all active:scale-95 transform-gpu shadow hover:opacity-90">
+                        Accept
+                      </button>
+                      <button className="bg-sidebar-accent text-text h-8 px-3 rounded-xl   text-xs font-medium transition-all active:scale-95 transform-gpu hover:bg-accent hover:text-accent-foreground shadow-sm">
+                        Ignore
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </>
-        )}
+              ))}
+            </>
+          ))}
 
         {/* Avator Name Location One tag(optional) */}
-        {activeTab === "Connected" && (
-          <>
-          {dummyMatched.map(data => (
-
-            
-            <div className="bg-card border border-border w-full p-4 rounded-3xl flex justify-between items-center gap-4">
-            <div className="flex gap-3 items-center">
-              <span className="w-12 h-12 bg-logo rounded-full text-white flex justify-center items-center font-semibold text-sm">
-                {getProfileInitials(data.firstName + " " + data.lastName)}
-              </span>
-              <div>
-                <p className="font-semibold  text-sm truncate">{data.firstName + " " + data.lastName}</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {data.location}
-                </p>
-              </div>
-            </div>
-            <EllipsisVertical className="text-text size-5" />
-          </div>
-            ))
-          }
-          </>
-        )}
+        {activeTab === "Connected" &&
+          (isConnectionsLoading ? (
+            <p>loading...</p>
+          ) : (
+            <>
+              {connections.map((data) => (
+                <div className="bg-card border border-border w-full p-4 rounded-3xl flex justify-between items-center ">
+                  <div className="flex gap-3 items-center">
+                    {data?.profilePicture ? (
+                      <img
+                        src={data?.profilePicture}
+                        className="w-14 md:w-16 md:h-16 h-14     rounded-full object-cover object-top"
+                        placeholder="profile picture"
+                      />
+                    ) : (
+                      <span className="w-14 md:w-16 md:h-16 h-14     bg-logo rounded-full text-white flex justify-center items-center font-semibold text-sm">
+                        {getProfileInitials(
+                          data.firstName + " " + data.lastName,
+                        )}
+                      </span>
+                    )}
+                    <div>
+                      <p className="font-semibold  text-sm truncate">
+                        {data.firstName + " " + data.lastName}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {data.location}
+                      </p>
+                    </div>
+                  </div>
+                  <EllipsisVertical className="text-text size-5" />
+                </div>
+              ))}
+            </>
+          ))}
       </main>
     </>
   );

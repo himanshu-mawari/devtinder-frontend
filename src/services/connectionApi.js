@@ -9,7 +9,20 @@ export const connectionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Feed"],
     }),
+    getConnections: builder.query({
+      query: () => ({
+        url: "/user/connections",
+      }),
+      transformResponse: (response) => response?.data
+    }),
+    getConnectionRequests: builder.query(
+      {
+        query: () => ({
+          url: "/user/requests/received"
+        }),
+        transformResponse: (response) => response?.data
+      }
+    )
   }),
 });
-
-export const { useSendRequestMutation } = connectionApi;
+export const { useSendRequestMutation , useGetConnectionsQuery , useGetConnectionRequestsQuery} = connectionApi;

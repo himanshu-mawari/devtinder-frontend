@@ -1,7 +1,7 @@
 import { developer } from "../data/developer";
 import { Globe, Check, X } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
-import { getProfileInitials } from "../utils/helpers";
+import { getProfileInitials, getGithubUrl } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import { useSendRequestMutation } from "../services/connectionApi";
 
@@ -31,19 +31,18 @@ const DeveloperCard = ({ user }) => {
       console.error(err.message);
     }
   };
+
   return (
     <article className="  w-full border border-border bg-card p-5 sm:p-6 md:p-8 rounded-3xl mt-5   xl:px-10 xl:py-7 2xl:mt-10">
       <div className="flex gap-4 md:gap-6 items-start mb-4">
-        {/* Tablet & Desktop Avatar */}
-
         {profilePicture ? (
           <img
             src={profilePicture}
             placeholder="Profile picture"
-            className="w-20 h-20 rounded-full object-cover object-top"
+            className="w-20 h-20 rounded-full object-cover object-top hidden md:block  "
           />
         ) : (
-          <span className="hidden bg-logo w-20 h-20 rounded-full justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl sm:flex shrink-0">
+          <span className="hidden bg-logo w-20 h-20 rounded-full justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl sidebar:flex shrink-0">
             {getProfileInitials(name.toUpperCase())}
           </span>
         )}
@@ -59,7 +58,6 @@ const DeveloperCard = ({ user }) => {
             {getProfileInitials(name)}
           </span>
         )}
-        {/* Identity details */}
         <div className="flex-1 min-w-0 mb-3 md:mb-4">
           <h2 className="text-lg md:text-2xl text-text font-bold text-gray-900">
             {name}
@@ -81,13 +79,11 @@ const DeveloperCard = ({ user }) => {
         </div>
       </div>
 
-      {/* Bio Text */}
       <p className="text-[15px] md:text-base leading-relaxed text-muted-foreground line-clamp-3 ">
         {bio}
       </p>
 
       <div className="mt-6 space-y-4 md:space-y-5 2xl:space-y-4">
-        {/* STACK */}
         {skills.length ? (
           <div>
             <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
@@ -108,7 +104,6 @@ const DeveloperCard = ({ user }) => {
           ""
         )}
 
-        {/* Interests*/}
         <div className="pt-1 ">
           <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
             Interests
@@ -125,13 +120,16 @@ const DeveloperCard = ({ user }) => {
           </div>
         </div>
 
-        {/* LINKS */}
         <div>
           <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
             Links
           </h3>
           <div className="flex items-center ml-1 gap-6 text-sm md:text-base text-text font-medium">
-            <Link className="flex items-center gap-1.5 transition-colors hover:underline">
+            <Link
+              className="flex items-center gap-1.5 transition-colors hover:underline"
+              to={getGithubUrl(githubUsername)}
+              target="_blank"
+            >
               <FaGithub className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
               <span>@{githubUsername}</span>
             </Link>
@@ -139,6 +137,7 @@ const DeveloperCard = ({ user }) => {
             <Link
               to="https://arjun.dev"
               className="flex items-center gap-1.5 transition-colors hover:underline"
+              target="_blank"
             >
               <Globe className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
               <span>{portfolioUrl}</span>
@@ -146,7 +145,6 @@ const DeveloperCard = ({ user }) => {
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
         <div className="flex items-center justify-center md:justify-around gap-4 pt-4 md:pt-6 ">
           <button
             type="button"
