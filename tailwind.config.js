@@ -23,7 +23,16 @@ export default {
         muted: "var(--color-text-muted)",
         "muted-foreground": "var(--muted-foreground)",
 
-        input: "var(--color-input)"
+        input: "var(--color-input)",
+
+        "sidebar-accent": "var(--sidebar-accent)",
+        "sidebar-accent-hover": "var(--sidebar-accent-hover)",
+
+        ring: "var(--color-ring)",
+
+        popover: "var(--color-popover)",
+        "popover-foreground": "var(--color-popover-foreground)",
+        destructive: "rgb(var(--color-destructive) / <alpha-value>)",
       },
 
       backgroundImage: {
@@ -39,9 +48,9 @@ export default {
         heading: ["Space Grotesk", "sans-serif"],
       },
 
-      screens:{
-        sidebar: "900px"
-      }
+      screens: {
+        sidebar: "900px",
+      },
     },
   },
 };

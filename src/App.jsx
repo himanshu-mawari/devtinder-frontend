@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Discover from "./pages/Discover";
-import Connection from "./pages/Connections";
+import Connections from "./pages/Connections";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";

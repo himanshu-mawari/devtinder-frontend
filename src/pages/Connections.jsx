@@ -72,7 +72,7 @@ const Connections = () => {
         </div>
       </article>
 
-      <main className="flex flex-col gap-3 mb-28">
+      <main className="flex flex-1 flex-col gap-3 mb-24 pr-2 sidebar:mb-2 overflow-y-auto">
         {activeTab === "Pending" &&
           (isRequestsLoading ? (
             <p>loading...</p>

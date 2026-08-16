@@ -21,17 +21,20 @@ const DeveloperCard = ({ user }) => {
   } = user;
   const name = firstName + " " + lastName;
   const [sendRequest] = useSendRequestMutation();
-
+  
   const handleSendRequest = async (status, id) => {
     try {
       const data = { status, id };
-
+      
       await sendRequest(data);
     } catch (err) {
       console.error(err.message);
     }
   };
-
+  
+  if(!user){
+    return <p>loading...</p>
+  }
   return (
     <article className="  w-full border border-border bg-card p-5 sm:p-6 md:p-8 rounded-3xl mt-5   xl:px-10 xl:py-7 2xl:mt-10">
       <div className="flex gap-4 md:gap-6 items-start mb-4">
