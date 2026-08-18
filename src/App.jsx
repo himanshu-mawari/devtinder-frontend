@@ -5,7 +5,6 @@ import AuthLayout from "./layouts/AuthLayout";
 import ChatLayout from "./layouts/ChatLayout";
 import Discover from "./pages/Discover";
 import Connections from "./pages/Connections";
-import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -22,62 +21,49 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <AppLayout />, // Keeps DesktopSidebar & Mobile Top/Bottom bars active
+    element: (
+      <ProtectedRoute>
+        <AppLayout />, // Keeps DesktopSidebar & Mobile Top/Bottom bars active
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
-        element: (
-          <ProtectedRoute>
-            <Navigate to="/discover" />
-          </ProtectedRoute>
-        ),
+        element: <Navigate to="/discover" />,
       },
       {
         path: "/discover",
-        element: (
-          <ProtectedRoute>
-            <Discover />
-          </ProtectedRoute>
-        ),
+        element: <Discover />,
       },
       {
         path: "/connections",
-        element: (
-          <ProtectedRoute>
-            <Connections />
-          </ProtectedRoute>
-        ),
+        element: <Connections />,
       },
       {
         path: "/profile",
-        element: (
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        ),
+        element: <Profile />,
       },
-
-      // Nested ChatLayout inside AppLayout
     ],
   },
-{
-  path: "/dm",
-  element: (
-    <ProtectedRoute>
-      <ChatLayout />
-    </ProtectedRoute>
-  ),
-  children: [
-    {
-      index: true,
-      element: <ChatViewPlaceholder />, // Render desktop empty state (e.g. "Select a chat")
-    },
-    {
-      path: ":userId", // Relative path without leading "/dm"
-      element: <ChatView />, // Component rendering active messages & input bar
-    },
-  ],
-}
+  {
+    path: "/dm",
+    element: (
+      <ProtectedRoute>
+        <ChatLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <ChatViewPlaceholder />,
+      },
+      {
+        path: ":userId",
+        element: <ChatView />,
+      },
+      
+    ],
+  },
 ]);
 
 function App() {

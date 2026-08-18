@@ -19,7 +19,7 @@ export const mockChats = [
     isOnline: true,
     unreadCount: 2,
     lastMessage: {
-      text: "Hey! Just reviewed your PR for the WebSocket hook 🚀",
+      text: "Hey!  🚀",
       senderId: "dev_101",
       timestamp: new Date("2026-08-17T10:42:00+05:30"),
     },
@@ -75,25 +75,32 @@ export const mockChats = [
 ];
 
 // Data for Column 3: Active Message Thread inside ChatView (Keyed by userId)
+// mockMessages.js
+// Structure: { [otherUserId]: Message[] }
+// Message shape mirrors your Message collection: senderId, text, createdAt
+// "dev_me" = the logged-in user for testing purposes — swap for real auth user later
+
+export const CURRENT_USER_ID = "dev_me";
+
 export const mockMessages = {
   dev_101: [
     {
       id: "msg_1",
-      senderId: "user_me",
-      text: "Hey Sarah! Did you get a chance to check out the new chat layout?",
-      timestamp: "10:30 AM",
+      senderId: "dev_101",
+      text: "Hey! Did you get a chance to check out the new chat layout? Hey! Did you get a chance to check out the new chat layout? Hey! Did you get a chance to check out the new chat layout?",
+      createdAt: "2026-08-17T10:30:00.000Z",
     },
     {
       id: "msg_2",
-      senderId: "dev_101",
+      senderId: "dev_me",
       text: "Yes! Looks super crisp on both mobile and desktop views.",
-      timestamp: "10:35 AM",
+      createdAt: "2026-08-17T10:35:00.000Z",
     },
     {
       id: "msg_3",
       senderId: "dev_101",
-      text: "Hey! Just reviewed your PR for the WebSocket hook 🚀",
-      timestamp: "10:42 AM",
+      text: "Just reviewed your PR for the WebSocket hook 🚀",
+      createdAt: "2026-08-17T10:42:00.000Z",
     },
   ],
   dev_102: [
@@ -101,13 +108,13 @@ export const mockMessages = {
       id: "msg_1",
       senderId: "dev_102",
       text: "Do you have the Docker setup specs ready?",
-      timestamp: "Yesterday",
+      createdAt: "2026-08-16T18:10:00.000Z",
     },
     {
       id: "msg_2",
-      senderId: "user_me",
+      senderId: "dev_me",
       text: "Sounds good! Let's schedule a call tomorrow.",
-      timestamp: "Yesterday",
+      createdAt: "2026-08-16T18:22:00.000Z",
     },
   ],
 };
