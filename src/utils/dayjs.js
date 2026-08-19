@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 // Compact relative time: "6h", "2d", "3w", "5m" (minutes), "just now"
 export const shortTimeAgo = (date) => {
+  if(!date) return ""
   const now = dayjs();
   const then = dayjs(date);
   const diffSec = now.diff(then, 'second');
