@@ -11,6 +11,9 @@ import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatViewPlaceholder from "./pages/ChatViewPlaceholder";
 import ChatView from "./pages/ChatView";
+import useAuth from "./hooks/useAuth";
+import { useEffect } from "react";
+import { socket } from "./utils/socket";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +26,7 @@ const router = createBrowserRouter([
   {
     element: (
       <ProtectedRoute>
-        <AppLayout />, // Keeps DesktopSidebar & Mobile Top/Bottom bars active
+        <AppLayout />, 
       </ProtectedRoute>
     ),
     children: [
@@ -61,12 +64,22 @@ const router = createBrowserRouter([
         path: ":userId",
         element: <ChatView />,
       },
-      
     ],
   },
 ]);
 
 function App() {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  },[isAuthenticated]);
+
   return <RouterProvider router={router} />;
 }
 

@@ -30,29 +30,29 @@ const ChatList = () => {
         >
           <GoArrowLeft size={24} />
         </button>
-        <h1 className="font-bold text-xl  sidebar:text-left mx-auto sidebar:mx-0 tracking-tight text-[var(--color-text)] truncate">
+        <h1 className="font-bold text-xl  sidebar:text-left mx-auto sidebar:mx-0 tracking-tight text-text truncate">
           {userData?.username}
         </h1>
       </header>
 
       <main>
         <div className="relative w-full">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-5 text-[var(--color-text-muted)] pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-5 text-muted pointer-events-none" />
           <input
             type="text"
             placeholder="Search"
-            className="w-full pl-11 pr-4 py-2 bg-[var(--color-input)] border-none text-sm rounded-xl text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] transition-all"
+            className="w-full pl-11 pr-4 py-2 bg-input border-none text-sm rounded-xl text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all"
           />
         </div>
 
         <div className="mt-5 md:mt-7">
           <div className="mb-4">
-            <h2 className="text-base font-semibold tracking-tight text-[var(--color-text)]">
+            <h2 className="text-base font-semibold tracking-tight text-text">
               Messages
             </h2>
           </div>
 
-          <div className="divide-y divide-[var(--sidebar-border)]">
+          <div className="divide-y divide-sidebar-border">
             {chatList.map((chat) => {
               const otherUsersDetail = chat.participants.find(
                 (user) => user._id !== loggedInUserId,
@@ -63,7 +63,7 @@ const ChatList = () => {
               return (
                 <div
                   key={chat._id}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-[var(--sidebar-accent-hover)] rounded-xl px-2 transition-colors"
+                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-sidebar-accent-hover rounded-xl px-2 transition-colors"
                   onClick={() => handleRoute(otherUsersDetail._id)}
                 >
                   <div className="shrink-0 relative">
@@ -73,17 +73,14 @@ const ChatList = () => {
                       className="w-14 h-14 object-cover object-top rounded-full"
                     />
                     {chat.isOnline && (
-                      <span className="absolute bottom-0 right-0 size-3.5 bg-emerald-500 border-2 border-[var(--color-sidebar)] rounded-full" />
+                      <span className="absolute bottom-0 right-0 size-3.5 bg-emerald-500 border-2 border-sidebar rounded-full" />
                     )}
                   </div>
 
                   <div className="flex- 1 min-w-0">
                     <p
-                      className={`text-sm truncate ${
-                        !chat.read
-                          ? "font-semibold text-[var(--color-text)]"
-                          : "font-normal text-[var(--color-text)]"
-                      }`}
+                      className="text-sm truncate 
+                          font-normal text-text"
                     >
                       {name}
                     </p>
@@ -91,7 +88,7 @@ const ChatList = () => {
                     <div className="flex items-center text-sm truncate">
                       <p
                         className="truncate pr-1
-                            font-normal text-[var(--color-text-muted)]"
+                            font-normal text-text-muted"
                       >
                         {chat.lastMessage ? `${chat.lastMessage}` : "Say hi 👋"}
                       </p>
@@ -101,13 +98,13 @@ const ChatList = () => {
                             <span
                               className={
                                 !chat.read
-                                  ? "font-semibold text-[var(--color-text)]"
-                                  : "font-normal text-[var(--color-text-muted)]"
+                                  ? "font-semibold text-text"
+                                  : "font-normal text-text-muted"
                               }
                             >
                               ·
                             </span>
-                            <span className="shrink-0 font-normal text-[var(--color-text-muted)]">
+                            <span className="shrink-0 font-normal text-text-muted">
                               {shortTimeAgo(chat.lastMessageAt)}
                             </span>
                           </>

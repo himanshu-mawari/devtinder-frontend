@@ -1,19 +1,9 @@
 import { Outlet, useParams } from "react-router-dom";
 import DesktopSidebar from "../components/DesktopSidebar";
 import ChatList from "../components/ChatList";
-import { socket } from "../utils/socket";
-import { useEffect } from "react";
-
 const ChatLayout = () => {
   const { userId } = useParams();
 
-  useEffect(() => {
-    socket.connect();
-
-    return () => {
-      socket.disconnect();
-    };
-  });
 
   return (
     <div className="flex h-[100dvh] w-full overflow-hidden ">
