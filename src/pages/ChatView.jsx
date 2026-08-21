@@ -1,4 +1,4 @@
-import { useEffect, useState , useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { GoArrowLeft } from "react-icons/go";
 import { LuSendHorizontal } from "react-icons/lu";
@@ -7,16 +7,17 @@ import { socket } from "../utils/socket";
 import { useGetUserDetailQuery } from "../services/userApi";
 import { useGetChatMessagesQuery } from "../services/chatApi";
 import useAuth from "../hooks/useAuth";
+import { toast } from "sonner";
 
 const ChatView = () => {
   const [chatId, setChatId] = useState();
   const { userId: targetUserId } = useParams();
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState([]);
-  const hasSeeded = useRef(false)
+  const hasSeeded = useRef(false);
 
   const navigate = useNavigate();
-  const {loggedInUserId}  = useAuth();
+  const { loggedInUserId } = useAuth();
 
   const { data: userDetail, isLoading } = useGetUserDetailQuery(
     { userId: targetUserId },
@@ -27,14 +28,16 @@ const ChatView = () => {
   const { data: messageHistory, isLoading: messageLoading } =
     useGetChatMessagesQuery(chatId, { skip: !chatId });
 
-
   useEffect(() => {
     socket.emit("joinChat", { targetUserId });
 
     const handleChatJoined = ({ chatId }) => setChatId(chatId);
-    const handleJoinError = ({ message }) => console.log(message);
-    const handleMessageReceived = ({ text  , _id   , senderId, createdAt}) => {
-      setMessages((prev) => [...prev, {text , _id  ,senderId, createdAt}]);
+    const handleJoinError = ({ message }) => {
+      toast.error(message);
+      navigate("/dm");
+    };
+    const handleMessageReceived = ({ text, _id, senderId, createdAt }) => {
+      setMessages((prev) => [...prev, { text, _id, senderId, createdAt }]);
     };
 
     socket.on("chatJoined", handleChatJoined);
@@ -52,7 +55,7 @@ const ChatView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     if (messageHistory) {
       setMessages(messageHistory);
-          hasSeeded.current = true;
+      hasSeeded.current = true;
     }
   }, [messageHistory]);
 
@@ -62,11 +65,11 @@ const ChatView = () => {
 
   const sendMessage = () => {
     socket.emit("sendMessage", { targetUserId, text: messageText });
-    socket.on("sendMessageError", ({ message }) => console.log(message));
+    socket.on("sendMessageError", ({ message }) => toast.error(message));
     setMessageText("");
   };
 
-  console.log(messages)
+  console.log(messages);
 
   const { username, profilePicture, firstName, lastName } = userDetail || "";
   const name = firstName + " " + lastName;
@@ -102,9 +105,8 @@ const ChatView = () => {
       <section className="flex-1 overflow-y-auto min-h-0 py-4 md:py-6 px-4 2xl:px-7">
         <div className="flex flex-col justify-end min-h-full space-y-3 md:space-y-5">
           {messages.map((message) => {
-            const senderId = message.senderId._id || message.senderId
+            const senderId = message.senderId._id || message.senderId;
             const isMine = senderId === loggedInUserId;
-            
 
             return (
               <div
@@ -122,7 +124,6 @@ const ChatView = () => {
                 >
                   <p className="text-sm md:text-base sidebar:text-sm 2xl:text-base leading-relaxed break-words">
                     {message.text}
-                    
                   </p>
                 </div>
               </div>
