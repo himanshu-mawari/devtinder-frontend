@@ -14,6 +14,7 @@ import ChatView from "./pages/ChatView";
 import useAuth from "./hooks/useAuth";
 import { useEffect } from "react";
 import { socket } from "./utils/socket";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
   {
     element: (
       <ProtectedRoute>
-        <AppLayout />, 
+        <AppLayout />,
       </ProtectedRoute>
     ),
     children: [
@@ -78,9 +79,14 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  },[isAuthenticated]);
+  }, [isAuthenticated]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster position="top-center" richColors />
+    </>
+  );
 }
 
 export default App;
