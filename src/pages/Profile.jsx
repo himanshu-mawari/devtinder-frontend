@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { CiMail, CiLink } from "react-icons/ci";
 import { LuGithub } from "react-icons/lu";
-import { Compass, Users, MessageSquare, User } from "lucide-react";
 import { mockUser } from "../data/userData";
+import { useGetProfileQuery } from "../services/userApi";
 
 const ProfileScreen = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isLong = mockUser?.bio?.length > 100;
+  const isLong = mockUser?.bio?.length < 90;
+  console.log(isLong)
+  const {data } = useGetProfileQuery();
+  
+  
+  const {firstName , lastName , email , githubUsername , bio, profilePicture , skills , tags , username , role , portfolioUrl} = data
+  console.log(bio.length)
 
   return (
     <div className="relative mx-auto flex h-dvh  flex-col overflow-hidden bg-background text-text">
@@ -22,18 +28,18 @@ const ProfileScreen = () => {
         <section className="mb-6 space-y-4">
           <div className="flex items-center gap-4">
             <img
-              src={mockUser.profilePicture}
-              alt={`${mockUser.firstName} ${mockUser.lastName}`}
-              className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover ring-2 ring-border"
+              src={profilePicture}
+              alt={`${mockUser.firstName} ${lastName}`}
+              className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover object-top ring-2 ring-border"
             />
             <div>
               <h3 className="text-lg md:text-xl 2xl:text-lg font-bold leading-tight text-text">
-                {mockUser.firstName} {mockUser.lastName}
+                {firstName} {lastName}
               </h3>
-              <p className="text-sm md:text-base text-muted">@{mockUser.username}</p>
+              <p className="text-sm md:text-base text-muted">@{username}</p>
               {mockUser.role && (
                 <span className="mt-1.5 inline-block rounded-full bg-secondary py-0.5 text-xs md:text-sm 2xl:text-xs font-medium text-secondary-foreground">
-                  {mockUser.role}
+                  {role}
                 </span>
               )}
             </div>
@@ -46,7 +52,7 @@ const ProfileScreen = () => {
                   !isExpanded && isLong ? "line-clamp-2" : ""
                 }`}
               >
-                {mockUser.bio}
+                {bio}
               </p>
               {isLong && (
                 <button
@@ -79,11 +85,11 @@ const ProfileScreen = () => {
                 href={`mailto:${mockUser.email}`}
                 className="hover:text-primary hover:underline"
               >
-                {mockUser.email}
+                {email}
               </a>
             </div>
 
-            {mockUser.githubUsername && (
+            {githubUsername && (
               <div className="flex items-center gap-3 text-muted-foreground">
                 <LuGithub className="h-5 w-5 shrink-0 text-muted" />
                 <a
@@ -92,21 +98,21 @@ const ProfileScreen = () => {
                   rel="noopener noreferrer"
                   className="hover:text-primary hover:underline"
                 >
-                  {mockUser.githubUsername}
+                  {githubUsername}
                 </a>
               </div>
             )}
 
-            {mockUser.website && (
+            {portfolioUrl && (
               <div className="flex items-center gap-3 text-muted-foreground">
                 <CiLink className="h-5 w-5 shrink-0 text-muted" />
                 <a
-                  href={mockUser.website}
+                  href={portfolioUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary hover:underline"
                 >
-                  {mockUser.website.replace(/^https?:\/\//, "")}
+                  {portfolioUrl.replace(/^https?:\/\//, "")}
                 </a>
               </div>
             )}
@@ -118,7 +124,7 @@ const ProfileScreen = () => {
             Skills & Interests
           </h3>
 
-          {mockUser.skills?.length > 0 && (
+          {skills?.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-xs font-semibold text-muted">Skills</h4>
               <div className="flex flex-wrap gap-2 md:gap-3">
@@ -134,13 +140,13 @@ const ProfileScreen = () => {
             </div>
           )}
 
-          {mockUser.interests?.length > 0 && (
+          {tags?.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-xs font-semibold text-muted">
                 Interests
               </h4>
               <div className="flex flex-wrap gap-2 md:gap-3">
-                {mockUser.interests.map((interest) => (
+                {tags.map((interest) => (
                   <span
                     key={interest}
                     className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs md:text-sm font-medium text-muted-foreground"
