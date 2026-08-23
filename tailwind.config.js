@@ -48,6 +48,10 @@ export default {
         heading: ["Space Grotesk", "sans-serif"],
       },
 
+      boxShadow: {
+        'logo-glow': 'var(--shadow-logo)',
+      },
+
       screens: {
         sidebar: "900px",
       },

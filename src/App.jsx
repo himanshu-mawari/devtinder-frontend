@@ -11,6 +11,7 @@ import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatViewPlaceholder from "./pages/ChatViewPlaceholder";
 import ChatView from "./pages/ChatView";
+import ProfileEdit from "./pages/ProfileEdit";
 import useAuth from "./hooks/useAuth";
 import { useEffect } from "react";
 import { socket } from "./utils/socket";
@@ -36,16 +37,25 @@ const router = createBrowserRouter([
         element: <Navigate to="/discover" />,
       },
       {
-        path: "/discover",
+        path: "discover",
         element: <Discover />,
       },
       {
-        path: "/connections",
+        path: "connections",
         element: <Connections />,
       },
       {
-        path: "/profile",
-        element: <Profile />,
+        path: "profile",
+        children: [
+          {
+            index: true,
+            element: <Profile />,
+          },
+          {
+            path: "edit",
+            element: <ProfileEdit />,
+          },
+        ],
       },
     ],
   },

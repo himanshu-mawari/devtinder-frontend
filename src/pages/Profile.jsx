@@ -3,22 +3,38 @@ import { CiMail, CiLink } from "react-icons/ci";
 import { LuGithub } from "react-icons/lu";
 import { mockUser } from "../data/userData";
 import { useGetProfileQuery } from "../services/userApi";
+import { Link } from "react-router-dom";
 
 const ProfileScreen = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isLong = mockUser?.bio?.length < 90;
-  console.log(isLong)
-  const {data } = useGetProfileQuery();
-  
-  
-  const {firstName , lastName , email , githubUsername , bio, profilePicture , skills , tags , username , role , portfolioUrl} = data
-  console.log(bio.length)
+  const { data, isLoading } = useGetProfileQuery();
+
+  if (isLoading) {
+    return <p>loading...</p>;
+  }
+
+  const {
+    firstName,
+    lastName,
+    email,
+    githubUsername,
+    bio,
+    profilePicture,
+    skills,
+    tags,
+    username,
+    role,
+    portfolioUrl,
+  } = data;
 
   return (
     <div className="relative mx-auto flex h-dvh  flex-col overflow-hidden bg-background text-text">
       <main className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] mb-20 lg:mb-0">
         <header className="mb-6">
-          <h2 className="text-2xl md:text-3xl 2xl:text-2xl font-bold text-text">Profile</h2>
+          <h2 className="text-2xl md:text-3xl 2xl:text-2xl font-bold text-text">
+            Profile
+          </h2>
           <p className="mt-1 text-sm leading-snug text-muted">
             Manage your personal details — this is what other developers see
             when they discover you..
@@ -65,13 +81,14 @@ const ProfileScreen = () => {
               )}
             </div>
           )}
-
-          <button
-            type="button"
-            className="w-full rounded-xl bg-primary px-6 py-2.5 text-sm md:text-base 2xl:text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 active:scale-95 sm:w-auto"
-          >
-            Edit profile
-          </button>
+          <Link className="w-full block sm:w-auto" to={"edit"}>
+            <button
+              type="button"
+              className="w-full rounded-xl bg-primary px-6 py-2.5 text-sm md:text-base 2xl:text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 active:scale-95 "
+            >
+              Edit profile
+            </button>
+          </Link>
         </section>
 
         <div className="mb-6 rounded-2xl border border-border bg-card p-5 md:p-6 2xl:p-5 shadow-sm">
@@ -121,7 +138,7 @@ const ProfileScreen = () => {
 
         <div className="space-y-4">
           <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-muted">
-            Skills & Interests
+            Skills {tags?.length > 0 ? "& Interests" : ""}
           </h3>
 
           {skills?.length > 0 && (
@@ -142,9 +159,7 @@ const ProfileScreen = () => {
 
           {tags?.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-xs font-semibold text-muted">
-                Interests
-              </h4>
+              <h4 className="text-xs font-semibold text-muted">Interests</h4>
               <div className="flex flex-wrap gap-2 md:gap-3">
                 {tags.map((interest) => (
                   <span
@@ -161,8 +176,6 @@ const ProfileScreen = () => {
 
         <div className="h-6" />
       </main>
-
-    
     </div>
   );
 };
