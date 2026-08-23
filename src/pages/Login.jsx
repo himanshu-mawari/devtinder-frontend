@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Mail, Lock, Eye, EyeOff, AtSign } from "lucide-react";
+import { useLoginMutation } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,8 +12,17 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
-  const onSubmit = (data) => console.log(data);
+  const [login, { error, isError }] = useLoginMutation();
+  const onSubmit = async (data) => {
+    try {
+      await login(data).unwrap();
+      navigate("/discover");
+    } catch (err) {
+      console.error(err.data.message);
+    }
+  };
 
   return (
     <>
@@ -33,7 +44,8 @@ const Login = () => {
           >
             Welcome back
           </h1>
-          <p className="text-sm md:text-base md:tracking-tight mt-1 text-muted leading-relaxed">Back to building with developers who get it.
+          <p className="text-sm md:text-base md:tracking-tight mt-1 text-muted leading-relaxed">
+            Back to building with developers who get it.
           </p>
         </hgroup>
 
@@ -84,7 +96,6 @@ const Login = () => {
                       required: "Password is required",
                     })}
                     id="password"
-
                     placeholder="password"
                     autoComplete="current-password"
                     className="w-full rounded-xl border border-border bg-background py-3 pl-11 xl:pl-12 pr-4 text-sm  placeholder:text-muted-foreground placeholder:opacity-60 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -107,7 +118,9 @@ const Login = () => {
                   </p>
                 )}
               </div>
-
+              {isError && (
+                <p className="text-xs text-red-500">{error?.data?.message}</p>
+              )}
               <div className="flex justify-center py-3 ">
                 <button
                   type="submit"
