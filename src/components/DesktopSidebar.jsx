@@ -13,16 +13,14 @@ const DesktopSidebar = ({ collapsed }) => {
     return <p>loading...</p>;
   }
 
-  const { firstName, lastName, username, profilePicture } = user;
+  const { firstName, lastName, username, profilePicture } = user || "";
   const name = firstName + " " + lastName;
 
   const toggleProfileMenu = () => setIsProfileMenuOpen((prev) => !prev);
 
-  console.log(collapsed);
-
   return (
     <div
-      className={`flex flex-col h-full bg-sidebar border-r transition-all duration-300 ${
+      className={`flex flex-col h-full  bg-sidebar border-r transition-all duration-300 ${
         collapsed ? "w-16  p-2 items-center" : "w-64 p-4"
       }`}
     >
@@ -45,7 +43,7 @@ const DesktopSidebar = ({ collapsed }) => {
           return (
             <NavLink
               key={item.id}
-              to={item.id}
+              to={item.path}
               replace
               title={collapsed ? item.label : undefined}
               className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -74,12 +72,12 @@ const DesktopSidebar = ({ collapsed }) => {
       <div
         className={`relative mt-auto transition-colors ${
           collapsed
-            ? "flex justify-center w-full py-2" // Clean avatar-only look (no bg, no border)
+            ? "flex justify-center w-full py-2"
             : "p-2.5 border border-sidebar-border bg-sidebar-accent hover:bg-sidebar-accent-hover focus-within:ring-2 focus-within:ring-ring rounded-xl flex items-center gap-3"
         }`}
       >
         <button
-          className={`flex items-center w-full  gap-3 focus:outline-none ${collapsed ? "p-0" :"p-2.5"}`}
+          className={`flex items-center w-full  gap-3 focus:outline-none ${collapsed ? "p-0" : "p-2.5"}`}
           onClick={toggleProfileMenu}
         >
           {profilePicture ? (
@@ -105,7 +103,7 @@ const DesktopSidebar = ({ collapsed }) => {
             </span>
           )}
         </button>
-        {isProfileMenuOpen && <ProfileMenu />}
+        {isProfileMenuOpen && <ProfileMenu toggleProfileMenu={toggleProfileMenu} />}
       </div>
     </div>
   );
