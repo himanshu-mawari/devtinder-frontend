@@ -10,12 +10,19 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
     getUserDetail: builder.query({
-      query: ({userId}) => ({
+      query: ({ userId }) => ({
         url: `user/${userId}`,
       }),
-      transformResponse:  (response) => response?.data
+      transformResponse: (response) => response?.data,
+    }),
+    updateProfile: builder.mutation({
+      query: () => ({
+        url: "profile/edit",
+        method: "PATCH",
+      }),
+      transformResponse: (response) => response?.data,
     }),
   }),
 });
 
-export const { useGetProfileQuery , useGetUserDetailQuery} = userApi;
+export const { useGetProfileQuery, useGetUserDetailQuery , useUpdateProfileMutation } = userApi;
