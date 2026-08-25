@@ -51,12 +51,17 @@ const ProfileEdit = () => {
     formData.append("githubUsername", data?.githubUsername);
     formData.append("portfolioUrl", data?.portfolioUrl);
     formData.append("skills", skills);
-    formData.append("interests", interests);
+    formData.append("tags", interests);
+    formData.append("title" , data?.title)
     if (data?.profilePicture) {
       formData.append("profilePicture", data?.profilePicture);
     }
 
-    await updateprofile({data});
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    await updateprofile(formData);
     navigate("/profile");
   };
 
@@ -159,7 +164,7 @@ const ProfileEdit = () => {
                   </div>
 
                   <label
-                    htmlFor="avator-picture"
+                    htmlFor="avatar-picture"
                     className="absolute -bottom-1 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-card text-primary shadow-sm ring-2 ring-card transition-transform cursor-pointer"
                   >
                     <Camera className="h-4 w-4" />
@@ -253,6 +258,21 @@ const ProfileEdit = () => {
                         },
                       })}
                       className="w-full rounded-xl border border-border bg-input py-2.5 pl-8 pr-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted md:text-sm xl:text-xs">
+                    Title
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      placeholder="Software developer"
+                      {...register("title", {
+                        maxLength: 100,
+                      })}
+                      className="w-full rounded-xl border border-border bg-input py-2.5 px-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                   </div>
                 </div>

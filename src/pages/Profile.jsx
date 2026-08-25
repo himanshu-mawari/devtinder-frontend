@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CiMail, CiLink } from "react-icons/ci";
 import { LuGithub } from "react-icons/lu";
+import { MapPin } from "lucide-react";
 import { mockUser } from "../data/userData";
 import { useGetProfileQuery } from "../services/userApi";
 import { Link } from "react-router-dom";
@@ -24,8 +25,9 @@ const ProfileScreen = () => {
     skills,
     tags,
     username,
-    role,
+    title,
     portfolioUrl,
+    location,
   } = data;
 
   return (
@@ -52,10 +54,22 @@ const ProfileScreen = () => {
               <h3 className="text-lg md:text-xl 2xl:text-lg font-bold leading-tight text-text">
                 {firstName} {lastName}
               </h3>
-              <p className="text-sm md:text-base text-muted">@{username}</p>
-              {mockUser.role && (
+              <div className="flex flex-wrap items-center gap-x-2 text-sm text-muted md:text-base">
+                <p>@{username}</p>
+                {location && (
+                  <>
+                    <span className="text-muted/60">•</span>
+                    <div className="flex items-center gap-1 text-xs md:text-sm">
+                      <MapPin className="h-3.5 w-3.5" />
+                      <span>{location}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {title && (
                 <span className="mt-1.5 inline-block rounded-full bg-secondary py-0.5 text-xs md:text-sm 2xl:text-xs font-medium text-secondary-foreground">
-                  {role}
+                  {title}
                 </span>
               )}
             </div>
@@ -110,7 +124,7 @@ const ProfileScreen = () => {
               <div className="flex items-center gap-3 text-muted-foreground">
                 <LuGithub className="h-5 w-5 shrink-0 text-muted" />
                 <a
-                  href={`https://github.com/${mockUser.githubUsername}`}
+                  href={`https://github.com/${githubUsername}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary hover:underline"
@@ -164,7 +178,7 @@ const ProfileScreen = () => {
                 {tags.map((interest) => (
                   <span
                     key={interest}
-                    className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs md:text-sm font-medium text-muted-foreground"
+                    className="rounded-lg bg-secondary px-3 py-1.5 text-xs md:text-sm font-medium text-secondary-foreground"
                   >
                     {interest}
                   </span>
