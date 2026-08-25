@@ -33,6 +33,7 @@ export default {
         popover: "var(--color-popover)",
         "popover-foreground": "var(--color-popover-foreground)",
         destructive: "rgb(var(--color-destructive) / <alpha-value>)",
+        pill: "var(--color-pill)",
       },
 
       backgroundImage: {
@@ -49,7 +50,7 @@ export default {
       },
 
       boxShadow: {
-        'logo-glow': 'var(--shadow-logo)',
+        "logo-glow": "var(--shadow-logo)",
       },
 
       screens: {

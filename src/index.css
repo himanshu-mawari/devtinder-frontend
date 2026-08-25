@@ -45,7 +45,8 @@
   --color-destructive: 239 68 68;
 
   --border: #2b314a;
-   --shadow-logo:0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
+  --shadow-logo: 0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
+  --color-pill: #1B2238;
 }
 
 
@@ -101,10 +102,11 @@
   --color-popover: #ffffff;
   --color-popover-foreground: #090d16;
 
-   --color-destructive: 239 68 68;
+  --color-destructive: 239 68 68;
 
-   --shadow-logo:0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
+  --shadow-logo: 0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
 
+  --color-pill: #f0f3ff;
 }
 
 @layer base {

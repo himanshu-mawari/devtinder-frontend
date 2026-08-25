@@ -16,10 +16,12 @@ export const userApi = baseApi.injectEndpoints({
       transformResponse: (response) => response?.data,
     }),
     updateProfile: builder.mutation({
-      query: () => ({
+      query: ({data}) => ({
         url: "profile/edit",
         method: "PATCH",
+        body: data
       }),
+      invalidatesTags: ["User"],
       transformResponse: (response) => response?.data,
     }),
   }),
