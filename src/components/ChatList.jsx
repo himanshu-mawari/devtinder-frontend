@@ -4,6 +4,7 @@ import { GoArrowLeft } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { useGetChatListQuery } from "../services/chatApi";
 import { useGetProfileQuery } from "../services/userApi";
+import ChatListSkeleton from "./ChatListSkeleton";
 
 const ChatList = () => {
   const navigate = useNavigate();
@@ -13,13 +14,11 @@ const ChatList = () => {
   const { data: userData, isLoading: profileLoading } = useGetProfileQuery();
   const { data: chatList, isLoading } = useGetChatListQuery();
 
-  if (isLoading || profileLoading) {
-    return <p>loading...</p>;
-  }
-
   const loggedInUserId = userData?._id;
 
-  return (
+  return isLoading || !profileLoading ? (
+    <ChatListSkeleton />
+  ) : (
     <div className="space-y-5">
       <header className="flex items-center relative">
         <button
