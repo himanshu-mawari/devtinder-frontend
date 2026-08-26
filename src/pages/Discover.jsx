@@ -1,10 +1,10 @@
 import DeveloperCard from "../components/DeveloperCard";
 import { useFeedQuery } from "../services/feedApi";
 import DeveloperCardSkeleton from "../components/DeveloperCardSkeleton";
+import DiscoverEmptyState from "../components/DiscoverEmptyState";
 
 const Discover = () => {
   const { data: users, isLoading } = useFeedQuery();
-
   return (
     <div className="w-full">
       <div className="flex flex-col ">
@@ -18,9 +18,9 @@ const Discover = () => {
           </p>
         </header>
 
-        {!isLoading ? (
+        {isLoading ? (
           <DeveloperCardSkeleton />
-        ) : (
+        ) : !users.length ? (
           <>
             {users.map((user, index) => (
               <div className={index === 0 ? "block" : "hidden"}>
@@ -28,6 +28,8 @@ const Discover = () => {
               </div>
             ))}
           </>
+        ) : (
+          <DiscoverEmptyState />
         )}
       </div>
     </div>
