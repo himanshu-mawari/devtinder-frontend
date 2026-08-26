@@ -1,12 +1,9 @@
-import React from "react";
 import DeveloperCard from "../components/DeveloperCard";
 import { useFeedQuery } from "../services/feedApi";
+import DeveloperCardSkeleton from "../components/DeveloperCardSkeleton";
 
 const Discover = () => {
   const { data: users, isLoading } = useFeedQuery();
-  if (isLoading) return <p>loading...</p>;
-
-  console.log("users by discover : " + users);
 
   return (
     <div className="w-full">
@@ -21,11 +18,17 @@ const Discover = () => {
           </p>
         </header>
 
-        {users.map((user, index) => (
-          <div className={index === 0 ? "block" : "hidden"} >
-          <DeveloperCard user={user} />
-            </div>
-        ))}
+        {!isLoading ? (
+          <DeveloperCardSkeleton />
+        ) : (
+          <>
+            {users.map((user, index) => (
+              <div className={index === 0 ? "block" : "hidden"}>
+                <DeveloperCard user={user} />
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );
