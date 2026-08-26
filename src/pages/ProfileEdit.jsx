@@ -33,6 +33,7 @@ const ProfileEdit = () => {
         githubUsername: user?.githubUsername,
         portfolioUrl: user?.portfolioUrl,
         location: user?.location,
+        title: user?.title,
       });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,13 +53,9 @@ const ProfileEdit = () => {
     formData.append("portfolioUrl", data?.portfolioUrl);
     formData.append("skills", skills);
     formData.append("tags", interests);
-    formData.append("title" , data?.title)
+    formData.append("title", data?.title);
     if (data?.profilePicture) {
       formData.append("profilePicture", data?.profilePicture);
-    }
-
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
     }
 
     await updateprofile(formData);
@@ -210,6 +207,11 @@ const ProfileEdit = () => {
                       })}
                       className="w-full rounded-xl border border-border bg-input px-3.5 py-2.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                     />
+                    {errors.firstName && (
+                      <p className="text-[12px] text-red-500">
+                        {errors.firstName.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-1.5">
@@ -220,18 +222,23 @@ const ProfileEdit = () => {
                       type="text"
                       placeholder="Mawari"
                       {...register("lastName", {
-                        required: "Last  name is required",
+                        required: "Last name is required",
                         minLength: {
                           value: 3,
-                          message: "Last  name must be at least 3 characters",
+                          message: "Last name must be at least 3 characters",
                         },
                         maxLength: {
                           value: 30,
-                          message: "Last   name can't exceed 30 characters",
+                          message: "Last name can't exceed 30 characters",
                         },
                       })}
                       className="w-full rounded-xl border border-border bg-input px-3.5 py-2.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                     />
+                    {errors.lastName && (
+                      <p className="text-[12px] text-red-500">
+                        {errors.lastName.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -239,63 +246,90 @@ const ProfileEdit = () => {
                   <label className="text-xs font-bold uppercase tracking-wider text-muted md:text-sm xl:text-xs">
                     Username
                   </label>
-                  <div className="relative flex items-center">
-                    <span className="absolute left-3.5 text-sm text-muted">
-                      @
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="himanshu"
-                      {...register("username", {
-                        required: "Username is required",
-                        minLength: {
-                          value: 3,
-                          message: "Username must be at least 3 characters",
-                        },
-                        maxLength: {
-                          value: 30,
-                          message: "Username can't exceed 30 characters",
-                        },
-                      })}
-                      className="w-full rounded-xl border border-border bg-input py-2.5 pl-8 pr-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
+                  <div className="relative flex flex-col gap-1">
+                    <div className="flex items-center ">
+                      <span className="absolute left-3.5 text-sm text-muted">
+                        @
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="himanshu"
+                        {...register("username", {
+                          required: "Username is required",
+                          minLength: {
+                            value: 3,
+                            message: "Username must be at least 3 characters",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message: "Username can't exceed 30 characters",
+                          },
+                        })}
+                        className="w-full rounded-xl border border-border bg-input py-2.5 pl-8 pr-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+                      />
+                    </div>
+                    {errors.username && (
+                      <p className="text-[12px] text-red-500">
+                        {errors.username.message}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-muted md:text-sm xl:text-xs">
                     Title
                   </label>
-                  <div className="relative flex items-center">
-                    <input
-                      type="text"
-                      placeholder="Software developer"
-                      {...register("title", {
-                        maxLength: 100,
-                      })}
-                      className="w-full rounded-xl border border-border bg-input py-2.5 px-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
+
+                  <div className="relative flex flex-col gap-1">
+                    <div className="flex items-center">
+                      <input
+                        type="text"
+                        placeholder="Software developer"
+                        {...register("title", {
+                          maxLength: {
+                            value: 100,
+                            message: "Title can't exceed 100 characters",
+                          },
+                        })}
+                        className="w-full rounded-xl border border-border bg-input py-2.5 px-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+                      />
+                    </div>
+                    {errors.title && (
+                      <p className="text-[12px] text-red-500">
+                        {errors.title.message}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-muted md:text-sm xl:text-xs">
                     Location
                   </label>
-                  <div className="relative flex items-center">
-                    <input
-                      type="text"
-                      placeholder="New Delhi, india"
-                      {...register("location", {
-                        maxLength: {
-                          value: 100,
-                          message: "Location can't exceed 100 characters",
-                        },
-                        pattern: {
-                          value: /^[a-zA-Z\s,.-]+$/,
-                          message: "Enter a valid location",
-                        },
-                      })}
-                      className="w-full rounded-xl border border-border bg-input py-2.5 px-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
+                  <div className="relative flex flex-col gap-1">
+                    <div
+                      className="flex items-center"
+                    >
+                      <input
+                        type="text"
+                        placeholder="New Delhi, india"
+                        {...register("location", {
+                          maxLength: {
+                            value: 100,
+                            message: "Location can't exceed 100 characters",
+                          },
+                          pattern: {
+                            value: /^[a-zA-Z\s,.-]+$/,
+                            message: "Enter a valid location",
+                          },
+                        })}
+                        className="w-full rounded-xl border border-border bg-input py-2.5 px-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
+                      />
+                    </div>
+                    {errors.location && (
+                      <p className="text-[12px] text-red-500">
+                        {errors.location.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -317,6 +351,11 @@ const ProfileEdit = () => {
                     })}
                     className="w-full resize-none rounded-xl border border-border bg-input p-3.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                   />
+                  {errors.bio && (
+                    <p className="text-[12px] text-red-500">
+                      {errors.bio.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -347,6 +386,11 @@ const ProfileEdit = () => {
                     })}
                     className="w-full rounded-xl border border-border bg-input px-3.5 py-2.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                   />
+                  {errors.githubUsername && (
+                    <p className="text-[12px] text-red-500">
+                      {errors.githubUsername.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -365,6 +409,11 @@ const ProfileEdit = () => {
                     })}
                     className="w-full rounded-xl border border-border bg-input px-3.5 py-2.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
                   />
+                  {errors.portfolioUrl && (
+                    <p className="text-[12px] text-red-500">
+                      {errors.portfolioUrl.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
