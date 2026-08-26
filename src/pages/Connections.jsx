@@ -9,6 +9,7 @@ import {
 import ConnectionRequestSkeleton from "../components/ConnectionRequestSkeleton";
 import ConnectionCardSkeleton from "../components/ConnectionCardSkeleton";
 import ConnectionRequestEmptyState from "../components/ConnectionRequestEmptyState";
+import ConnectionsEmptyState from "../components/ConnectionsEmptyState";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
@@ -31,8 +32,6 @@ const Connections = () => {
       console.error(err.message);
     }
   };
-
-  console.log(Boolean(0))
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -77,8 +76,9 @@ const Connections = () => {
         {activeTab === "Pending" &&
           (isRequestsLoading ? (
             <ConnectionRequestSkeleton />
+          ) : !connectionRequests.length ? (
+            <ConnectionRequestEmptyState />
           ) : (
-            !connectionRequests.length ? <ConnectionRequestEmptyState /> :
             <>
               {connectionRequests.map((data) => (
                 <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start md:items-center gap-4">
@@ -135,8 +135,9 @@ const Connections = () => {
         {activeTab === "Connected" &&
           (isConnectionsLoading ? (
             <ConnectionCardSkeleton />
+          ) : !connections.length ? (
+            <ConnectionsEmptyState />
           ) : (
-            
             <>
               {connections.map((data) => (
                 <div className="bg-card border border-border w-full p-4 rounded-3xl flex justify-between items-center ">
