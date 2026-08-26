@@ -8,6 +8,7 @@ import { useGetUserDetailQuery } from "../services/userApi";
 import { useGetChatMessagesQuery } from "../services/chatApi";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
+import ChatViewSkeleton from "../components/ChatViewSkeleton";
 
 const ChatView = () => {
   const [chatId, setChatId] = useState();
@@ -59,9 +60,7 @@ const ChatView = () => {
     }
   }, [messageHistory]);
 
-  if (isLoading || messageLoading || !chatId) {
-    return <p>loading....</p>;
-  }
+ 
 
   const sendMessage = () => {
     socket.emit("sendMessage", { targetUserId, text: messageText });
@@ -74,7 +73,9 @@ const ChatView = () => {
   const { username, profilePicture, firstName, lastName } = userDetail || "";
   const name = firstName + " " + lastName;
 
-  return (
+  return isLoading || messageLoading ? (
+    <ChatViewSkeleton />
+  ) : (
     <div className="flex flex-col h-full  -mx-4 md:-mx-8 ">
       <header className="flex items-center px-4 pb-2 md:pb-3 gap-4 md:gap-6  2xl:px-7    border-b border-border   shrink-0 bg-background">
         <button
@@ -103,7 +104,7 @@ const ChatView = () => {
       </header>
 
       <section className="flex-1 overflow-y-auto min-h-0 py-4 md:py-6 px-4 2xl:px-7">
-        <div className="flex flex-col justify-end min-h-full space-y-3 md:space-y-5">
+        <div className="flex flex-col justify-end min-h-full space-y-2 md:space-y-3">
           {messages.map((message) => {
             const senderId = message.senderId._id || message.senderId;
             const isMine = senderId === loggedInUserId;
@@ -116,13 +117,13 @@ const ChatView = () => {
                 }`}
               >
                 <div
-                  className={`max-w-[60%]  rounded-2xl px-4 py-2.5 md:py-3 sidebar:py-2 border ${
+                  className={`max-w-[60%]  rounded-2xl px-4 py-2 sidebar:py-1.5 border ${
                     isMine
                       ? "bg-primary text-primary-foreground border-primary rounded-br-none"
                       : "bg-sidebar-accent text-text border-border rounded-bl-none"
                   }`}
                 >
-                  <p className="text-sm md:text-base sidebar:text-sm 2xl:text-base leading-relaxed break-words">
+                  <p className="text-sm md:text-base sidebar:text-sm leading-relaxed break-words">
                     {message.text}
                   </p>
                 </div>
