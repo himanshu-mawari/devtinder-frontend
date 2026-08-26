@@ -6,6 +6,8 @@ import {
   useGetConnectionRequestsQuery,
   useReviewConnectionRequestsMutation,
 } from "../services/connectionApi";
+import ConnectionRequestSkeleton from "../components/ConnectionRequestSkeleton";
+import ConnectionCardSkeleton from "../components/ConnectionCardSkeleton";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
@@ -22,7 +24,7 @@ const Connections = () => {
 
   const handleRequest = async (action, requestId) => {
     try {
-      const data = {action , requestId}
+      const data = { action, requestId };
       await reviewConnectionRequests(data);
     } catch (err) {
       console.error(err.message);
@@ -50,7 +52,7 @@ const Connections = () => {
           >
             Pending
             {isRequestsLoading ? (
-              <p>loading...</p>
+              <p>(0)</p>
             ) : (
               <p> ({connectionRequests.length})</p>
             )}
@@ -63,19 +65,15 @@ const Connections = () => {
             onClick={() => handleActiveTab("Connected")}
           >
             Connected
-            {isConnectionsLoading ? (
-              <p>loading...</p>
-            ) : (
-              <p> ({connections.length})</p>
-            )}
+            {isConnectionsLoading ? <p>(0)</p> : <p> ({connections.length})</p>}
           </button>
         </div>
       </article>
 
-      <main className="flex flex-1 flex-col gap-3 mb-24 pr-2 sidebar:mb-2 overflow-y-auto">
+      <main className="flex flex-1 flex-col gap-3 mb-24 lg:mb-0 pr-2 sidebar:mb-2 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {activeTab === "Pending" &&
           (isRequestsLoading ? (
-            <p>loading...</p>
+            <ConnectionRequestSkeleton />
           ) : (
             <>
               {connectionRequests.map((data) => (
@@ -113,13 +111,13 @@ const Connections = () => {
                     <div className="flex gap-2 mt-3 md:mt-0">
                       <button
                         className="bg-primary text-primary-foreground h-8 px-3  text-xs rounded-xl  font-medium transition-all active:scale-95 transform-gpu shadow hover:opacity-90"
-                        onClick={() => handleRequest("accepted" , data._id)}
+                        onClick={() => handleRequest("accepted", data._id)}
                       >
                         Accept
                       </button>
                       <button
                         className="bg-sidebar-accent text-text h-8 px-3 rounded-xl   text-xs font-medium transition-all active:scale-95 transform-gpu hover:bg-accent hover:text-accent-foreground shadow-sm"
-                        onClick={() => handleRequest("rejected" , data._id)}
+                        onClick={() => handleRequest("rejected", data._id)}
                       >
                         Reject
                       </button>
@@ -132,7 +130,7 @@ const Connections = () => {
 
         {activeTab === "Connected" &&
           (isConnectionsLoading ? (
-            <p>loading...</p>
+            <ConnectionCardSkeleton />
           ) : (
             <>
               {connections.map((data) => (
