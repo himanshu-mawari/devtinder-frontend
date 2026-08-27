@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -17,80 +17,68 @@ import { useEffect } from "react";
 import { socket } from "./utils/socket";
 import { Toaster } from "sonner";
 
+// NEW — lives inside the router, safe to call useNavigate/useAuth
+function RootLayout() {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, [isAuthenticated]);
+
+  return <Outlet />;
+}
+
 const router = createBrowserRouter([
   {
-    element: <AuthLayout />,
-    children: [
-      { path: "/login", element: <Login /> },
-      { path: "/signup", element: <Signup /> },
-    ],
-  },
-  {
-    element: (
-      <ProtectedRoute>
-        <AppLayout />,
-      </ProtectedRoute>
-    ),
+    element: <RootLayout />, // NEW wrapper, top-level parent of everything
     children: [
       {
-        index: true,
-        element: <Navigate to="/discover" />,
-      },
-      {
-        path: "discover",
-        element: <Discover />,
-      },
-      {
-        path: "connections",
-        element: <Connections />,
-      },
-      {
-        path: "profile",
+        element: <AuthLayout />,
         children: [
+          { path: "/login", element: <Login /> },
+          { path: "/signup", element: <Signup /> },
+        ],
+      },
+      {
+        element: (
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, element: <Navigate to="/discover" /> },
+          { path: "discover", element: <Discover /> },
+          { path: "connections", element: <Connections /> },
           {
-            index: true,
-            element: <Profile />,
-          },
-          {
-            path: "edit",
-            element: <ProfileEdit />,
+            path: "profile",
+            children: [
+              { index: true, element: <Profile /> },
+              { path: "edit", element: <ProfileEdit /> },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    path: "/dm",
-    element: (
-      <ProtectedRoute>
-        <ChatLayout />
-      </ProtectedRoute>
-    ),
-    children: [
       {
-        index: true,
-        element: <ChatViewPlaceholder />,
-      },
-      {
-        path: ":userId",
-        element: <ChatView />,
+        path: "/dm",
+        element: (
+          <ProtectedRoute>
+            <ChatLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, element: <ChatViewPlaceholder /> },
+          { path: ":userId", element: <ChatView /> },
+        ],
       },
     ],
   },
 ]);
 
 function App() {
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    socket.connect();
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [isAuthenticated]);
-
   return (
     <>
       <Toaster position="top-center" richColors />
