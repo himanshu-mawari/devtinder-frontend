@@ -10,6 +10,7 @@ import ConnectionRequestSkeleton from "../components/ConnectionRequestSkeleton";
 import ConnectionCardSkeleton from "../components/ConnectionCardSkeleton";
 import ConnectionRequestEmptyState from "../components/ConnectionRequestEmptyState";
 import ConnectionsEmptyState from "../components/ConnectionsEmptyState";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
@@ -18,10 +19,22 @@ const Connections = () => {
     setActiveTab(tabName);
   };
 
-  const { data: connections, isLoading: isConnectionsLoading } =
-    useGetConnectionsQuery();
-  const { data: connectionRequests, isLoading: isRequestsLoading } =
-    useGetConnectionRequestsQuery();
+  const {
+    data: connections,
+    isLoading: isConnectionsLoading,
+    isError: isConnectionsError,
+    error: connectionsError,
+    isFetching: isConnectionsFetching,
+    refetch: refetchConnections,
+  } = useGetConnectionsQuery();
+  const {
+    data: connectionRequests,
+    isLoading: isRequestsLoading,
+    isError: isRequestsError,
+    error: requestsError,
+    isFetching: isRequestsFetching,
+    refetch: refetchRequests,
+  } = useGetConnectionRequestsQuery();
   const [reviewConnectionRequests] = useReviewConnectionRequestsMutation();
 
   const handleRequest = async (action, requestId) => {
@@ -32,6 +45,15 @@ const Connections = () => {
       console.error(err.message);
     }
   };
+
+  const connectionsErrorConfig = useErrorHandler(
+    connectionsError,
+    "connections",
+  );
+  const requestsErrorConfig = useErrorHandler(
+    requestsError,
+    "connection requests",
+  );
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -56,7 +78,7 @@ const Connections = () => {
             {isRequestsLoading ? (
               <p>(0)</p>
             ) : (
-              <p> ({connectionRequests.length})</p>
+              <p> ({connectionRequests?.length})</p>
             )}
           </button>
 
@@ -67,7 +89,11 @@ const Connections = () => {
             onClick={() => handleActiveTab("Connected")}
           >
             Connected
-            {isConnectionsLoading ? <p>(0)</p> : <p> ({connections.length})</p>}
+            {isConnectionsLoading ? (
+              <p>(0)</p>
+            ) : (
+              <p> ({connections?.length})</p>
+            )}
           </button>
         </div>
       </article>
@@ -76,12 +102,19 @@ const Connections = () => {
         {activeTab === "Pending" &&
           (isRequestsLoading ? (
             <ConnectionRequestSkeleton />
+          ) : isRequestsError ? (
+            <ErrorState
+              message={requestsErrorConfig.message}
+              showRetry={requestsErrorConfig.showRetry}
+              onRetry={refetchRequests}
+              isRetrying={isRequestsFetching}
+            />
           ) : !connectionRequests.length ? (
             <ConnectionRequestEmptyState />
           ) : (
             <>
               {connectionRequests.map((data) => (
-                <div className="bg-card border border-border w-full p-4 rounded-3xl flex items-start md:items-center gap-4">
+                <div key={data._id} className="bg-card border border-border w-full p-4 rounded-3xl flex items-start md:items-center gap-4">
                   {data?.fromUserId?.profilePicture ? (
                     <img
                       src={data?.fromUserId?.profilePicture}
@@ -135,12 +168,19 @@ const Connections = () => {
         {activeTab === "Connected" &&
           (isConnectionsLoading ? (
             <ConnectionCardSkeleton />
+          ) : isConnectionsError ? (
+            <ErrorState
+              message={connectionsErrorConfig.message}
+              showRetry={connectionsErrorConfig.showRetry}
+              onRetry={refetchConnections}
+              isRetrying={isConnectionsFetching}
+            />
           ) : !connections.length ? (
             <ConnectionsEmptyState />
           ) : (
             <>
               {connections.map((data) => (
-                <div className="bg-card border border-border w-full p-4 rounded-3xl flex justify-between items-center ">
+                <div key={data._id} className="bg-card border border-border w-full p-4 rounded-3xl flex justify-between items-center ">
                   <div className="flex gap-3 items-center">
                     {data?.profilePicture ? (
                       <img
