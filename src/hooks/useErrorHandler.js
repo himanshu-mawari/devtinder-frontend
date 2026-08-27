@@ -1,14 +1,14 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getErrorConfig } from "../utils/errorConfig";
-import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { getErrorConfig } from "../utils/errorConfig";
 import { baseApi } from "../services/baseApi";
 
-const useErrorHandler = (error, context) => {
+export const useErrorHandler = (error, context, options) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const config = getErrorConfig(error, context);
+  const config = getErrorConfig(error, context, options);
   const hasHandledSessionExpiry = useRef(false);
 
   useEffect(() => {
@@ -22,5 +22,3 @@ const useErrorHandler = (error, context) => {
 
   return config;
 };
-
-export default useErrorHandler;
