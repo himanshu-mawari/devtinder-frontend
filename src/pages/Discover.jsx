@@ -2,9 +2,12 @@ import DeveloperCard from "../components/DeveloperCard";
 import { useFeedQuery } from "../services/feedApi";
 import DeveloperCardSkeleton from "../components/DeveloperCardSkeleton";
 import DiscoverEmptyState from "../components/DiscoverEmptyState";
+import ErrorState from "../components/ErrorState";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const Discover = () => {
-  const { data: users, isLoading } = useFeedQuery();
+  const { data: users, isLoading, isError, error , isFetching , refetch } = useFeedQuery();
+  const {message , showRetry} =  useErrorHandler(error , "developers")
   return (
     <div className="w-full">
       <div className="flex flex-col ">
@@ -20,10 +23,12 @@ const Discover = () => {
 
         {isLoading ? (
           <DeveloperCardSkeleton />
-        ) : !users.length ? (
+        ) : isError ? (
+          <ErrorState message={message} onRetry={refetch} showRetry={showRetry} isRetrying={isFetching}/>
+        ) : users.length ? (
           <>
             {users.map((user, index) => (
-              <div className={index === 0 ? "block" : "hidden"}>
+              <div key={user._id} className={index === 0 ? "block" : "hidden"}>
                 <DeveloperCard user={user} />
               </div>
             ))}

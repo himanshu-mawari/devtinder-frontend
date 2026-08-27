@@ -93,8 +93,8 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
       <Toaster position="top-center" richColors />
+      <RouterProvider router={router} />
     </>
   );
 }

@@ -7,6 +7,7 @@ export const feedApi = baseApi.injectEndpoints({
         url: "/user/feed",
         method: "GET",
       }),
+      providesTags:["Feed"]              ,
       transformResponse: (response) => response?.data
     }),
   }),
