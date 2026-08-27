@@ -9,6 +9,9 @@ import { useGetChatMessagesQuery } from "../services/chatApi";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import ChatViewSkeleton from "../components/ChatViewSkeleton";
+import useErrorHandler from "../hooks/useErrorHandler";
+import EmptyChatMessage from "../components/EmptyChatMessage";
+import ErrorState from "../components/ErrorState"
 
 const ChatView = () => {
   const [chatId, setChatId] = useState();
@@ -18,16 +21,23 @@ const ChatView = () => {
   const hasSeeded = useRef(false);
 
   const navigate = useNavigate();
-  const { loggedInUserId } = useAuth();
-
+  const { user } = useAuth();
+  const loggedInUserId = user?._id;
   const { data: userDetail, isLoading } = useGetUserDetailQuery(
     { userId: targetUserId },
     {
       skip: !targetUserId,
     },
   );
-  const { data: messageHistory, isLoading: messageLoading } =
-    useGetChatMessagesQuery(chatId, { skip: !chatId });
+  const {
+    data: messageHistory,
+    isLoading: messageLoading,
+    isError,
+    error,
+    isFetching,
+    refetch,
+  } = useGetChatMessagesQuery(chatId, { skip: !chatId });
+  const { message, showRetry } = useErrorHandler(error, "conversation");
 
   useEffect(() => {
     socket.emit("joinChat", { targetUserId });
@@ -60,21 +70,26 @@ const ChatView = () => {
     }
   }, [messageHistory]);
 
- 
-
-  const sendMessage = () => {
-    socket.emit("sendMessage", { targetUserId, text: messageText });
+  const sendMessage = (overrideText) => {
+    const textToSend =
+      typeof overrideText === "string" ? overrideText : messageText;
+    socket.emit("sendMessage", { targetUserId, text: textToSend });
     socket.on("sendMessageError", ({ message }) => toast.error(message));
     setMessageText("");
   };
-
-  console.log(messages);
 
   const { username, profilePicture, firstName, lastName } = userDetail || "";
   const name = firstName + " " + lastName;
 
   return isLoading || messageLoading ? (
     <ChatViewSkeleton />
+  ) : isError ? (
+    <ErrorState
+      message={message}
+      showRetry={showRetry}
+      onRetry={refetch}
+      isRetrying={isFetching}
+    />
   ) : (
     <div className="flex flex-col h-full  -mx-4 md:-mx-8 ">
       <header className="flex items-center px-4 pb-2 md:pb-3 gap-4 md:gap-6  2xl:px-7    border-b border-border   shrink-0 bg-background">
@@ -104,33 +119,37 @@ const ChatView = () => {
       </header>
 
       <section className="flex-1 overflow-y-auto min-h-0 py-4 md:py-6 px-4 2xl:px-7">
-        <div className="flex flex-col justify-end min-h-full space-y-2 md:space-y-3">
-          {messages.map((message) => {
-            const senderId = message.senderId._id || message.senderId;
-            const isMine = senderId === loggedInUserId;
+        {!messageHistory?.length ? (
+          <EmptyChatMessage recipient={userDetail} sendMessage={sendMessage} />
+        ) : (
+          <div className="flex flex-col justify-end min-h-full space-y-2 md:space-y-3">
+            {messages.map((message) => {
+              const senderId = message.senderId._id || message.senderId;
+              const isMine = senderId === loggedInUserId;
 
-            return (
-              <div
-                key={message._id}
-                className={`flex w-full ${
-                  isMine ? "justify-end" : "justify-start"
-                }`}
-              >
+              return (
                 <div
-                  className={`max-w-[60%]  rounded-2xl px-4 py-2 sidebar:py-1.5 border ${
-                    isMine
-                      ? "bg-primary text-primary-foreground border-primary rounded-br-none"
-                      : "bg-sidebar-accent text-text border-border rounded-bl-none"
+                  key={message._id}
+                  className={`flex w-full ${
+                    isMine ? "justify-end" : "justify-start"
                   }`}
                 >
-                  <p className="text-sm md:text-base sidebar:text-sm leading-relaxed break-words">
-                    {message.text}
-                  </p>
+                  <div
+                    className={`max-w-[60%]  rounded-2xl px-4 py-2 sidebar:py-1.5 border ${
+                      isMine
+                        ? "bg-primary text-primary-foreground border-primary rounded-br-none"
+                        : "bg-sidebar-accent text-text border-border rounded-bl-none"
+                    }`}
+                  >
+                    <p className="text-sm md:text-base sidebar:text-sm leading-relaxed break-words">
+                      {message.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <footer className="mt-auto -my-6 px-4 py-3.5  md:px-6 2xl:px-7  bg-background border-t border-border shrink-0">
