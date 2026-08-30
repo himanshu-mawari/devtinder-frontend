@@ -12,8 +12,7 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
     login: builder.mutation({
-      query: (data) => ({        url: "login",        method: "POST",        body: data,
-      }),
+      query: (data) => ({ url: "login", method: "POST", body: data }),
       invalidatesTags: ["User"],
     }),
     logout: builder.mutation({
@@ -24,7 +23,7 @@ export const authApi = baseApi.injectEndpoints({
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         await queryFulfilled;
         dispatch(baseApi.util.resetApiState());
-      }, 
+      },
     }),
   }),
 });

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Mail, Lock, Eye, EyeOff, AtSign } from "lucide-react";
+import { Lock, Eye, EyeOff, AtSign } from "lucide-react";
 import { useLoginMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const Login = () => {
       await login(data).unwrap();
       navigate("/discover");
     } catch (err) {
-      console.error(err.data.message);
+      console.error(err?.data?.message || err?.message || "Login failed");
     }
   };
 
