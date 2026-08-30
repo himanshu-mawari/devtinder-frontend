@@ -14,11 +14,18 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const [signup]= useSignupMutation();
-  const onSubmit = async (data) => {
-    await signup(data);
-    navigate("/discover")
+  const [signup] = useSignupMutation();
+
+const onSubmit = async (data) => {
+  try {
+    await signup(data).unwrap();
+    navigate("/discover");
+  } catch (err) {
+    console.error(
+      err?.data?.message || err?.message || "Signup failed"
+    );
   }
+};
 
   return (
     <>
