@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useUpdateProfileMutation } from "../services/userApi";
 import { useNavigate } from "react-router-dom";
+import { getProfileInitials } from "../utils/helpers";
 
 const ProfileEdit = () => {
   const { data: user, isLoading } = useGetProfileQuery();
@@ -43,23 +44,27 @@ const ProfileEdit = () => {
   }, [user]);
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    formData.append("firstName", data?.firstName);
-    formData.append("lastName", data?.lastName);
-    formData.append("bio", data?.bio);
-    formData.append("location", data?.location);
-    formData.append("githubUsername", data?.githubUsername);
-    formData.append("portfolioUrl", data?.portfolioUrl);
-    formData.append("skills", skills);
-    formData.append("tags", interests);
-    formData.append("title", data?.title);
-    if (data?.profilePicture) {
-      formData.append("profilePicture", data?.profilePicture);
+      formData.append("firstName", data?.firstName);
+      formData.append("lastName", data?.lastName);
+      formData.append("bio", data?.bio);
+      formData.append("location", data?.location);
+      formData.append("githubUsername", data?.githubUsername);
+      formData.append("portfolioUrl", data?.portfolioUrl);
+      formData.append("skills", skills);
+      formData.append("tags", interests);
+      formData.append("title", data?.title);
+      if (data?.profilePicture) {
+        formData.append("profilePicture", data?.profilePicture);
+      }
+
+      await updateprofile(formData).unwrap();
+      navigate("/profile");
+    } catch (err) {
+      toast.error(err?.data?.message || err?.message || "Profile edit failed");
     }
-
-    await updateprofile(formData);
-    navigate("/profile");
   };
 
   if (isLoading || !user) {
@@ -155,7 +160,13 @@ const ProfileEdit = () => {
                       />
                     ) : (
                       <span className="font-heading flex h-full w-full items-center justify-center rounded-full bg-logo text-xl font-bold text-primary-foreground md:text-2xl xl:text-xl">
-                        HM
+                        {getProfileInitials(
+                          (
+                            user?.firstName +
+                            " " +
+                            user?.lastName
+                          ).toUpperCase(),
+                        )}
                       </span>
                     )}
                   </div>
@@ -193,7 +204,7 @@ const ProfileEdit = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Himanshu"
+                      placeholder="Enter first name"
                       {...register("firstName", {
                         required: "First name is required",
                         minLength: {
@@ -220,7 +231,7 @@ const ProfileEdit = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Mawari"
+                      placeholder="Enter last name"
                       {...register("lastName", {
                         required: "Last name is required",
                         minLength: {
@@ -253,7 +264,7 @@ const ProfileEdit = () => {
                       </span>
                       <input
                         type="text"
-                        placeholder="himanshu"
+                        placeholder="Choose a username"
                         {...register("username", {
                           required: "Username is required",
                           minLength: {
@@ -284,7 +295,7 @@ const ProfileEdit = () => {
                     <div className="flex items-center">
                       <input
                         type="text"
-                        placeholder="Software developer"
+                        placeholder="e.g. Software developer"
                         {...register("title", {
                           maxLength: {
                             value: 100,
@@ -306,12 +317,10 @@ const ProfileEdit = () => {
                     Location
                   </label>
                   <div className="relative flex flex-col gap-1">
-                    <div
-                      className="flex items-center"
-                    >
+                    <div className="flex items-center">
                       <input
                         type="text"
-                        placeholder="New Delhi, india"
+                        placeholder="e.g. New Delhi, india"
                         {...register("location", {
                           maxLength: {
                             value: 100,
@@ -372,7 +381,7 @@ const ProfileEdit = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="himanshu-mawari"
+                    placeholder="e.g. himanshu-mawari"
                     {...register("githubUsername", {
                       maxLength: {
                         value: 39,
@@ -399,7 +408,7 @@ const ProfileEdit = () => {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://himanshu.dev"
+                    placeholder="https://yourwebsite.com"
                     {...register("portfolioUrl", {
                       pattern: {
                         value: /^https?:\/\/[^\s$.?#].[^\s]*$/,

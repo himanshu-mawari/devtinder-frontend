@@ -6,10 +6,12 @@ import { useGetProfileQuery } from "../services/userApi";
 import { Link } from "react-router-dom";
 import ProfileSkeleton from "../components/ProfileSkeleton";
 import useErrorHandler from "../hooks/useErrorHandler";
+import { getProfileInitials } from "../utils/helpers";
 
 const ProfileScreen = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { data, isLoading , isError, error , isFetching , refetch } = useGetProfileQuery();
+  const { data, isLoading, isError, error, isFetching, refetch } =
+    useGetProfileQuery();
   const {
     firstName,
     lastName,
@@ -24,9 +26,11 @@ const ProfileScreen = () => {
     portfolioUrl,
     location,
   } = data;
-  const {message , showRetry} = useErrorHandler(error , "Profile")
-  
-  const isLong = bio?.length < 90;
+  const name = firstName + " " + lastName;
+  const { message, showRetry } = useErrorHandler(error, "Profile");
+
+  const isLong = bio?.length > 90;
+  console.log(profilePicture);
   return (
     <div className="relative mx-auto flex h-dvh  flex-col overflow-hidden bg-background text-text">
       <main className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] mb-20 lg:mb-0">
@@ -41,15 +45,27 @@ const ProfileScreen = () => {
         </header>
         {isLoading ? (
           <ProfileSkeleton />
-        ) :  isError ? 
-          <ErrorState message={message} onRetry={refetch} showRetry={showRetry} isRetrying={isFetching}/> : (
+        ) : isError ? (
+          <ErrorState
+            message={message}
+            onRetry={refetch}
+            showRetry={showRetry}
+            isRetrying={isFetching}
+          />
+        ) : (
           <section className="mb-6 space-y-4">
             <div className="flex items-center gap-4">
-              <img
-                src={profilePicture}
-                alt={`${firstName} ${lastName}`}
-                className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover object-top ring-2 ring-border"
-              />
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt={`${firstName} ${lastName}`}
+                  className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover object-top ring-2 ring-border"
+                />
+              ) : (
+                <span className="bg-logo w-20 h-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full flex justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl  shrink-0">
+                  {getProfileInitials(name.toUpperCase())}
+                </span>
+              )}
               <div>
                 <h3 className="text-lg md:text-xl 2xl:text-lg font-bold leading-tight text-text">
                   {firstName} {lastName}
