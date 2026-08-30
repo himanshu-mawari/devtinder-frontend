@@ -1,4 +1,3 @@
-import { developer } from "../data/developer";
 import { Globe, Check, X } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { getProfileInitials, getGithubUrl } from "../utils/helpers";
@@ -8,6 +7,7 @@ import { useSendRequestMutation } from "../services/connectionApi";
 const DeveloperCard = ({ user }) => {
   const {
     _id,
+    username,
     firstName,
     lastName,
     profilePicture,
@@ -21,20 +21,17 @@ const DeveloperCard = ({ user }) => {
   } = user;
   const name = firstName + " " + lastName;
   const [sendRequest] = useSendRequestMutation();
-  
+
   const handleSendRequest = async (status, id) => {
     try {
       const data = { status, id };
-      
+
       await sendRequest(data);
     } catch (err) {
       console.error(err.message);
     }
   };
-  
-  if(!user){
-    return <p>loading...</p>
-  }
+
   return (
     <article className="  w-full border border-border bg-card p-5 sm:p-6 md:p-8 rounded-3xl mt-5   xl:px-10 xl:py-7 2xl:mt-10">
       <div className="flex gap-4 md:gap-6 items-start mb-4">
@@ -62,22 +59,22 @@ const DeveloperCard = ({ user }) => {
           </span>
         )}
         <div className="flex-1 min-w-0 mb-3 md:mb-4">
-          <h2 className="text-lg md:text-2xl text-text font-bold text-gray-900">
+          <h2 className="text-lg md:text-2xl font-bold text-gray-900">
             {name}
           </h2>
-          {role ? (
-            <p className="text-sm md:text-base font-medium text-muted-foreground">
+
+          <div className="flex items-center flex-wrap gap-x-1.5 text-sm md:text-base text-muted-foreground mt-0.5">
+            {username && <span>@{username}</span>}
+
+            {username && location && <span>·</span>}
+
+            {location && <span>{location}</span>}
+          </div>
+
+          {role && (
+            <p className="text-sm md:text-base font-medium text-muted-foreground mt-1">
               {role}
             </p>
-          ) : (
-            <p></p>
-          )}
-          {location ? (
-            <p className="text-sm md:text-base text-muted-foreground mt-0.5 flex items-center">
-              {location}
-            </p>
-          ) : (
-            <p></p>
           )}
         </div>
       </div>
@@ -124,28 +121,37 @@ const DeveloperCard = ({ user }) => {
         </div>
 
         <div>
-          <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
-            Links
-          </h3>
-          <div className="flex items-center ml-1 gap-6 text-sm md:text-base text-text font-medium">
-            <Link
-              className="flex items-center gap-1.5 transition-colors hover:underline"
-              to={getGithubUrl(githubUsername)}
-              target="_blank"
-            >
-              <FaGithub className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-              <span>@{githubUsername}</span>
-            </Link>
-
-            <Link
-              to="https://arjun.dev"
-              className="flex items-center gap-1.5 transition-colors hover:underline"
-              target="_blank"
-            >
-              <Globe className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-              <span>{portfolioUrl}</span>
-            </Link>
-          </div>
+          {githubUsername || portfolioUrl ? (
+            <>
+              <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
+                Links
+              </h3>
+              <div className="flex items-center ml-1 gap-6 text-sm md:text-base text-text font-medium">
+                {githubUsername && (
+                  <Link
+                    className="flex items-center gap-1.5 transition-colors hover:underline"
+                    to={getGithubUrl(githubUsername)}
+                    target="_blank"
+                  >
+                    <FaGithub className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
+                    <span>@{githubUsername}</span>
+                  </Link>
+                )}
+                {portfolioUrl && (
+                  <Link
+                    to="https://arjun.dev"
+                    className="flex items-center gap-1.5 transition-colors hover:underline"
+                    target="_blank"
+                  >
+                    <Globe className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
+                    <span>{portfolioUrl}</span>
+                  </Link>
+                )}
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="flex items-center justify-center md:justify-around gap-4 pt-4 md:pt-6 ">
