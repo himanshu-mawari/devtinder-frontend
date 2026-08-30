@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { getErrorConfig } from "../utils/errorConfig";
 import { baseApi } from "../services/baseApi";
 
-export const useErrorHandler = (error, context, options) => {
+const useErrorHandler = (error, context, options) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const config = getErrorConfig(error, context, options);
@@ -22,3 +22,5 @@ export const useErrorHandler = (error, context, options) => {
 
   return config;
 };
+
+export default useErrorHandler;

@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CiMail, CiLink } from "react-icons/ci";
 import { LuGithub } from "react-icons/lu";
 import { MapPin } from "lucide-react";
-import { mockUser } from "../data/userData";
 import { useGetProfileQuery } from "../services/userApi";
 import { Link } from "react-router-dom";
 import ProfileSkeleton from "../components/ProfileSkeleton";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const ProfileScreen = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isLong = mockUser?.bio?.length < 90;
-  const { data, isLoading } = useGetProfileQuery();
-
+  const { data, isLoading , isError, error , isFetching , refetch } = useGetProfileQuery();
   const {
     firstName,
     lastName,
@@ -26,7 +24,9 @@ const ProfileScreen = () => {
     portfolioUrl,
     location,
   } = data;
-
+  const {message , showRetry} = useErrorHandler(error , "Profile")
+  
+  const isLong = bio?.length < 90;
   return (
     <div className="relative mx-auto flex h-dvh  flex-col overflow-hidden bg-background text-text">
       <main className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] mb-20 lg:mb-0">
@@ -41,12 +41,13 @@ const ProfileScreen = () => {
         </header>
         {isLoading ? (
           <ProfileSkeleton />
-        ) : (
+        ) :  isError ? 
+          <ErrorState message={message} onRetry={refetch} showRetry={showRetry} isRetrying={isFetching}/> : (
           <section className="mb-6 space-y-4">
             <div className="flex items-center gap-4">
               <img
                 src={profilePicture}
-                alt={`${mockUser.firstName} ${lastName}`}
+                alt={`${firstName} ${lastName}`}
                 className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover object-top ring-2 ring-border"
               />
               <div>
@@ -74,7 +75,7 @@ const ProfileScreen = () => {
               </div>
             </div>
 
-            {mockUser.bio && (
+            {bio && (
               <div>
                 <p
                   className={`text-sm md:text-base 2xl:text-sm text-muted-foreground ${
@@ -111,7 +112,7 @@ const ProfileScreen = () => {
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <CiMail className="h-5 w-5 shrink-0 text-muted" />
                   <a
-                    href={`mailto:${mockUser.email}`}
+                    href={`mailto:${email}`}
                     className="hover:text-primary hover:underline"
                   >
                     {email}
@@ -157,7 +158,7 @@ const ProfileScreen = () => {
                 <div className="space-y-2">
                   <h4 className="text-xs font-semibold text-muted">Skills</h4>
                   <div className="flex flex-wrap gap-2 md:gap-3">
-                    {mockUser.skills.map((skill) => (
+                    {skills.map((skill) => (
                       <span
                         key={skill}
                         className="rounded-lg bg-secondary px-3 py-1.5 text-xs md:text-sm font-medium text-secondary-foreground"

@@ -17,13 +17,14 @@ import { useEffect } from "react";
 import { socket } from "./utils/socket";
 import { Toaster } from "sonner";
 
-// NEW — lives inside the router, safe to call useNavigate/useAuth
 function RootLayout() {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) return;
+
     socket.connect();
+
     return () => {
       socket.disconnect();
     };
@@ -31,10 +32,9 @@ function RootLayout() {
 
   return <Outlet />;
 }
-
 const router = createBrowserRouter([
   {
-    element: <RootLayout />, // NEW wrapper, top-level parent of everything
+    element: <RootLayout />,
     children: [
       {
         element: <AuthLayout />,

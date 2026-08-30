@@ -3,10 +3,7 @@ import { baseApi } from "./baseApi";
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query({
-      query: () => ({
-        url: "profile/view",
-        method: "GET",
-      }),
+      query: () => ({ url: "profile/view", method: "GET" }),
       providesTags: ["User"],
     }),
     getUserDetail: builder.query({
@@ -19,7 +16,7 @@ export const userApi = baseApi.injectEndpoints({
       query: (formData) => ({
         url: "profile/edit",
         method: "PATCH",
-        body: formData
+        body: formData,
       }),
       invalidatesTags: ["User"],
       transformResponse: (response) => response?.data,
@@ -27,4 +24,8 @@ export const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetProfileQuery, useGetUserDetailQuery , useUpdateProfileMutation } = userApi;
+export const {
+  useGetProfileQuery,
+  useGetUserDetailQuery,
+  useUpdateProfileMutation,
+} = userApi;
