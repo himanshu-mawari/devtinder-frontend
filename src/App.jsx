@@ -12,26 +12,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ChatViewPlaceholder from "./pages/ChatViewPlaceholder";
 import ChatView from "./pages/ChatView";
 import ProfileEdit from "./pages/ProfileEdit";
-import useAuth from "./hooks/useAuth";
-import { useEffect } from "react";
-import { socket } from "./utils/socket";
 import { Toaster } from "sonner";
+import RootLayout from "./layouts/RootLayout";
 
-function RootLayout() {
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    socket.connect();
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [isAuthenticated]);
-
-  return <Outlet />;
-}
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
