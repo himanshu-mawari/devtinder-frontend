@@ -8,7 +8,16 @@ export const chatApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response) => response?.chatList
     }),
+    getChatMessages : builder.query({
+      query: (chatId) => ({
+        url: `chats/${chatId}/messages`
+      }),
+      transformResponse: (response) => response?.messages,
+      providesTags: (result , error , {chatId}) => [{type: "Message" , id:chatId}]
+    })
   }),
 });
 
-export const { useGetChatListQuery } = chatApi;
+// need invalidates tag
+
+export const { useGetChatListQuery , useGetChatMessagesQuery} = chatApi;
