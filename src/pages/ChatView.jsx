@@ -100,10 +100,9 @@ const ChatView = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(setActiveChatId(null))
-    }
-  }
-  )
+      dispatch(setActiveChatId(null));
+    };
+  },[]);
 
   const sendMessage = (overrideText) => {
     const textToSend =
