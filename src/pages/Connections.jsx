@@ -11,6 +11,7 @@ import ConnectionCardSkeleton from "../components/ConnectionCardSkeleton";
 import ConnectionRequestEmptyState from "../components/ConnectionRequestEmptyState";
 import ConnectionsEmptyState from "../components/ConnectionsEmptyState";
 import useErrorHandler from "../hooks/useErrorHandler";
+import ErrorState from "../components/ErrorState";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
