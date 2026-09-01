@@ -60,7 +60,16 @@ const ChatView = () => {
         }),
       );
 
-      markChatAsRead(chatId);
+      markChatAsRead(chatId)
+        .unwrap()
+        .catch(() => {
+          dispatch(
+            baseApi.util.updateQueryData("getChatList", undefined, (draft) => {
+              const c = draft.find((c) => c._id === chatId);
+              if (c) c.isUnread = true;
+            }),
+          );
+        });
     };
     const handleJoinError = ({ message }) => {
       toast.error(message);
