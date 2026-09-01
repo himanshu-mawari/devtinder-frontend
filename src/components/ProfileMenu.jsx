@@ -3,6 +3,7 @@ import { getProfileInitials } from "../utils/helpers";
 import { useGetProfileQuery } from "../services/userApi";
 import { useLogoutMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ProfileMenu = ({ toggleProfileMenu }) => {
   const { data: user } = useGetProfileQuery();
@@ -17,7 +18,7 @@ const ProfileMenu = ({ toggleProfileMenu }) => {
       await logout().unwrap();
       navigate("/login");
     } catch (err) {
-      console.error(err?.data?.message || "Logout failed");
+      toast.error(err?.data?.message || "Logout failed");
     }
   };
 
