@@ -19,8 +19,8 @@ const Login = () => {
     try {
       await login(data).unwrap();
       navigate("/discover");
-    } catch (err) {
-      console.error(err?.data?.message || err?.message || "Login failed");
+    } catch {
+      // intentionally empty — isError/error state already renders the inline message
     }
   };
 
