@@ -13,14 +13,6 @@ const useAuth = () => {
   });
   const isAuthenticated = !!user && !isError;
 
-  console.log({
-    user,
-    isAuthenticated,
-    isLoading,
-    isError,
-    error,
-  });
-
   return {
     user,
     isAuthenticated,
