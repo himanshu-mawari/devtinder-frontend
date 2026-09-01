@@ -3,6 +3,7 @@ import { FaGithub } from "react-icons/fa";
 import { getProfileInitials, getGithubUrl } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import { useSendRequestMutation } from "../services/connectionApi";
+import { toast } from "sonner";
 
 const DeveloperCard = ({ user }) => {
   const {
@@ -28,7 +29,7 @@ const DeveloperCard = ({ user }) => {
 
       await sendRequest(data);
     } catch (err) {
-      console.error(err.message);
+       toast.error(err?.data?.message || "Couldn't send request. Please try again.")
     }
   };
 
