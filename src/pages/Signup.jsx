@@ -14,18 +14,16 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const [signup] = useSignupMutation();
+  const [signup, { error, isError }] = useSignupMutation();
 
-const onSubmit = async (data) => {
-  try {
-    await signup(data).unwrap();
-    navigate("/discover");
-  } catch (err) {
-    console.error(
-      err?.data?.message || err?.message || "Signup failed"
-    );
-  }
-};
+  const onSubmit = async (data) => {
+    try {
+      await signup(data).unwrap();
+      navigate("/discover");
+    } catch {
+      // intentionally empty — isError/error state already renders the inline message
+    }
+  };
 
   return (
     <>
@@ -198,8 +196,10 @@ const onSubmit = async (data) => {
                   </p>
                 )}
               </div>
+              {isError && (
+                <p className="text-xs text-red-500">{error?.data?.message}</p>
+              )}
 
-              {/* Submit Button */}
               <div className="flex justify-center pt-2">
                 <button
                   type="submit"
