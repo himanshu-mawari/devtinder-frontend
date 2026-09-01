@@ -8,10 +8,7 @@ import ProfileMenu from "./ProfileMenu";
 const DesktopSidebar = ({ collapsed }) => {
   const desktopNavItems = NAV_ITEMS.filter((item) => !item.mobileOnly);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { data: user, isLoading } = useGetProfileQuery();
-  if (isLoading) {
-    return <p>loading...</p>;
-  }
+  const { data: user } = useGetProfileQuery();
 
   const { firstName, lastName, username, profilePicture } = user || "";
   const name = firstName + " " + lastName;
@@ -103,7 +100,9 @@ const DesktopSidebar = ({ collapsed }) => {
             </span>
           )}
         </button>
-        {isProfileMenuOpen && <ProfileMenu toggleProfileMenu={toggleProfileMenu} />}
+        {isProfileMenuOpen && (
+          <ProfileMenu toggleProfileMenu={toggleProfileMenu} />
+        )}
       </div>
     </div>
   );
