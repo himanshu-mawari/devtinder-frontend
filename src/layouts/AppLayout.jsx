@@ -6,11 +6,11 @@ const AppLayout = () => {
   return (
     <div className="flex h-[100dvh] w-full overflow-hidden">
       <aside className="hidden w-64 shrink-0 border-r bg-sidebar border-sidebar-border [@media(min-width:900px)]:block">
-        <DesktopSidebar />
+        <DesktopSidebar collapsed={false}/>
       </aside>
 
       <div className="flex-1 flex flex-col h-[100dvh] w-full overflow-hidden">
-        <div className="border-b border-border md:hidden shrink-0">
+        <div className="border-b border-border sidebar:hidden shrink-0">
           <MobileTopbar />
         </div>
 
@@ -20,7 +20,7 @@ const AppLayout = () => {
           </div>
         </main>
 
-        <footer className="shrink-0 [@media(min-width:900px)]:hidden">
+        <footer className="shrink-0 sidebar:hidden">
           <MobileBottomBar />
         </footer>
       </div>
