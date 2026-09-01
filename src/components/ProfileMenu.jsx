@@ -2,14 +2,14 @@ import { Moon, LogOut } from "lucide-react";
 import { getProfileInitials } from "../utils/helpers";
 import { useGetProfileQuery } from "../services/userApi";
 import { useLogoutMutation } from "../services/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 
 const ProfileMenu = ({ toggleProfileMenu }) => {
   const { data: user, isLoading } = useGetProfileQuery();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return <p>Loading...</p>;
   }
 
@@ -17,8 +17,12 @@ const ProfileMenu = ({ toggleProfileMenu }) => {
   const name = firstName + " " + lastName;
 
   const handleLogout = async () => {
-    await logout();
-    navigate("/login");
+    try {
+      await logout().unwrap();
+      navigate("/login");
+    } catch (err) {
+      console.error(err?.data?.message || "Logout failed");
+    }
   };
 
   return (

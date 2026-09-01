@@ -7,7 +7,7 @@ const MobileTopbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { data: user, isLoading } = useGetProfileQuery();
   if (isLoading) return <p>loading..</p>;
-  const { firstName, lastName, profilePicture } = user;
+  const { firstName, lastName, profilePicture } = user || "";
   const name = firstName + " " + lastName;
 
   const toggleProfileMenu = () => setIsProfileMenuOpen((prev) => !prev);
