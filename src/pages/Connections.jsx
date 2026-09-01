@@ -12,6 +12,7 @@ import ConnectionRequestEmptyState from "../components/ConnectionRequestEmptySta
 import ConnectionsEmptyState from "../components/ConnectionsEmptyState";
 import useErrorHandler from "../hooks/useErrorHandler";
 import ErrorState from "../components/ErrorState";
+import { toast } from "sonner";
 
 const Connections = () => {
   const [activeTab, setActiveTab] = useState("Pending");
@@ -43,7 +44,7 @@ const Connections = () => {
       const data = { action, requestId };
       await reviewConnectionRequests(data);
     } catch (err) {
-      console.error(err.message);
+      toast.error(err.message);
     }
   };
 
