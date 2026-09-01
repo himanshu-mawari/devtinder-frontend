@@ -27,6 +27,8 @@ const ChatList = () => {
 
   const loggedInUserId = userData?._id;
 
+  console.log(conversations);
+
   return isLoading || profileLoading ? (
     <ChatListSkeleton />
   ) : isError ? (
@@ -69,8 +71,8 @@ const ChatList = () => {
             </h2>
           </div>
 
-          {conversations.length ? (
-              <EmptyChatState />
+          {!conversations.length ? (
+            <EmptyChatState />
           ) : (
             <div className="divide-y divide-sidebar-border">
               {conversations.map((chat) => {
@@ -80,10 +82,13 @@ const ChatList = () => {
                 const name =
                   otherUsersDetail.firstName + " " + otherUsersDetail.lastName;
 
+                // Track unread state cleanly
+                const isUnread = chat.isUnread;
+
                 return (
                   <div
                     key={chat._id}
-                    className="flex items-center gap-3 py-3 cursor-pointer hover:bg-sidebar-accent-hover rounded-xl px-2 transition-colors"
+                    className="flex items-center gap-3 py-3 cursor-pointer hover:bg-sidebar rounded-xl px-2 transition-colors"
                     onClick={() => handleRoute(otherUsersDetail._id)}
                   >
                     <div className="shrink-0 relative">
@@ -97,43 +102,46 @@ const ChatList = () => {
                       )}
                     </div>
 
-                    <div className="flex- 1 min-w-0">
+                    <div className="flex-1 min-w-0">
                       <p
-                        className="text-sm truncate 
-                          font-normal text-text"
+                        className={`text-sm truncate text-text ${
+                          isUnread
+                            ? "font-semibold "
+                            : "font-medium "
+                        }`}
                       >
                         {name}
                       </p>
 
-                      <div className="flex items-center text-sm truncate">
+                      <div className="flex items-center text-sm truncate mt-0.5">
                         <p
-                          className="truncate pr-1
-                            font-normal text-text-muted"
+                          className={`truncate pr-1 text-text ${
+                            isUnread
+                              ? "font-semibold "
+                              : "font-normal "
+                          }`}
                         >
                           {chat.lastMessage
                             ? `${chat.lastMessage}`
                             : "Say hi 👋"}
                         </p>
-                        <div className="flex gap-1 shrink-0">
-                          {chat?.lastMessageAt ? (
-                            <>
-                              <span
-                                className={
-                                  !chat.read
-                                    ? "font-semibold text-text"
-                                    : "font-normal text-text-muted"
-                                }
-                              >
-                                ·
-                              </span>
-                              <span className="shrink-0 font-normal text-text-muted">
-                                {shortTimeAgo(chat.lastMessageAt)}
-                              </span>
-                            </>
-                          ) : null}
-                        </div>
+
+                        {chat?.lastMessageAt && (
+                          <div className="flex items-center gap-1 shrink-0 text-xs text-text-muted">
+                            <span>·</span>
+                            <span className="shrink-0">
+                              {shortTimeAgo(chat.lastMessageAt)}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
+
+                    {isUnread && (
+                      <div className="shrink-0 ml-2">
+                        <span className="block size-1.5 bg-blue-600 rounded-full" />
+                      </div>
+                    )}
                   </div>
                 );
               })}
