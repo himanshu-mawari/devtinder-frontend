@@ -11,7 +11,7 @@ const MobileBottomBar = () => {
           return (
             <NavLink
               key={item.id}
-              to={item.id}
+              to={item.path}
               className="group relative flex flex-col items-center justify-center gap-1 p-2"
             >
               {({ isActive }) => (
