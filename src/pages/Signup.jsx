@@ -56,7 +56,6 @@ const Signup = () => {
             className="flex flex-col gap-3"
           >
             <div className="space-y-3 md:space-y-3.5">
-              {/* Username */}
               <div className="space-y-1">
                 <label
                   htmlFor="username"
@@ -83,7 +82,6 @@ const Signup = () => {
                 )}
               </div>
 
-              {/* First & Last Name */}
               <div className="flex gap-3">
                 <div className="space-y-1 flex-1">
                   <label
@@ -131,7 +129,6 @@ const Signup = () => {
                 </div>
               </div>
 
-              {/* Email */}
               <div className="space-y-1">
                 <label
                   htmlFor="email"
@@ -158,7 +155,6 @@ const Signup = () => {
                 )}
               </div>
 
-              {/* Password */}
               <div className="space-y-1">
                 <label
                   htmlFor="password"
