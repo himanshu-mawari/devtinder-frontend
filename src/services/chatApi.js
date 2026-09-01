@@ -14,10 +14,15 @@ export const chatApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response) => response?.messages,
       providesTags: (result , error , {chatId}) => [{type: "Message" , id:chatId}]
+    }),
+    markChatAsRead : builder.mutation({
+      query: (chatId) => ({
+        url: `chats/${chatId}/read`,
+        method: "PATCH"
+      })
     })
   }),
 });
 
-// need invalidates tag
 
-export const { useGetChatListQuery , useGetChatMessagesQuery} = chatApi;
+export const { useGetChatListQuery , useGetChatMessagesQuery , useMarkChatAsReadMutation} = chatApi;
