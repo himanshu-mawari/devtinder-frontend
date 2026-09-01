@@ -1,5 +1,5 @@
 const ICEBREAKERS = [
-  { label: "Say hi 👋", text: "Say hi 👋" },
+  { label: "Say hi 👋", text: "hi 👋" },
   { label: "Chai code > Coffee code? ☕", text: "Chai code > Coffee code? ☕" },
   { label: "What are you building? 🚀", text: "What are you building? 🚀" },
 ];

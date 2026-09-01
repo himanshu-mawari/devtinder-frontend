@@ -7,8 +7,8 @@ const EmptyChatState = () => (
     <h3 className="font-heading text-lg sm:text-xl font-bold mb-1.5 text-text">
       Say Hello
     </h3>
-    <p className="font-sans text-xs sm:text-sm max-w-[240px] md:max-w-[300px]    leading-relaxed text-muted">
-      Looking to strike up a conversation? When you match with others, you can send them a direct message here.
+    <p className="font-sans text-xs sm:text-sm max-w-[240px] md:max-w-[300px] leading-relaxed text-muted">
+      Looking to strike up a conversation? When you connect with others, you can send them a direct message here.
     </p>
   </div>
 );
