@@ -11,7 +11,11 @@ import { toast } from "sonner";
 import ChatViewSkeleton from "../components/ChatViewSkeleton";
 import useErrorHandler from "../hooks/useErrorHandler";
 import EmptyChatMessage from "../components/EmptyChatMessage";
-import ErrorState from "../components/ErrorState"
+import ErrorState from "../components/ErrorState";
+import { baseApi } from "../services/baseApi";
+import { useMarkChatAsReadMutation } from "../services/chatApi";
+import { useDispatch } from "react-redux";
+import { setActiveChatId } from "../store/chatSlice";
 
 const ChatView = () => {
   const [chatId, setChatId] = useState();
@@ -22,7 +26,9 @@ const ChatView = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth();
+  const dispatch = useDispatch();
   const loggedInUserId = user?._id;
+
   const { data: userDetail, isLoading } = useGetUserDetailQuery(
     { userId: targetUserId },
     {
@@ -38,11 +44,24 @@ const ChatView = () => {
     refetch,
   } = useGetChatMessagesQuery(chatId, { skip: !chatId });
   const { message, showRetry } = useErrorHandler(error, "conversation");
+  const [markChatAsRead] = useMarkChatAsReadMutation();
 
   useEffect(() => {
     socket.emit("joinChat", { targetUserId });
 
-    const handleChatJoined = ({ chatId }) => setChatId(chatId);
+    const handleChatJoined = ({ chatId }) => {
+      setChatId(chatId);
+      dispatch(setActiveChatId(chatId));
+
+      dispatch(
+        baseApi.util.updateQueryData("getChatList", undefined, (draft) => {
+          const chat = draft.find((c) => c._id === chatId);
+          if (chat) chat.isUnread = false;
+        }),
+      );
+
+      markChatAsRead(chatId);
+    };
     const handleJoinError = ({ message }) => {
       toast.error(message);
       navigate("/dm");
@@ -70,10 +89,28 @@ const ChatView = () => {
     }
   }, [messageHistory]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setActiveChatId(null))
+    }
+  }
+  )
+
   const sendMessage = (overrideText) => {
     const textToSend =
       typeof overrideText === "string" ? overrideText : messageText;
     socket.emit("sendMessage", { targetUserId, text: textToSend });
+
+    dispatch(
+      baseApi.util.updateQueryData("getChatList", undefined, (draft) => {
+        const chat = draft.find((c) => c._id === chatId);
+        if (chat) {
+          chat.lastMessage = textToSend;
+          chat.lastMessageAt = new Date().toISOString();
+        }
+      }),
+    );
+
     socket.on("sendMessageError", ({ message }) => toast.error(message));
     setMessageText("");
   };
