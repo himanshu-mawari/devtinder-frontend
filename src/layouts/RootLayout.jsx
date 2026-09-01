@@ -2,14 +2,16 @@ import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
 import { socket } from "../utils/socket";
 import { Outlet } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { baseApi } from "../services/baseApi";
 
 const RootLayout = () => {
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+  const chatId = useSelector((state) => state.chat.activeChatId);
 
   useEffect(() => {
+    console.log("hey world");
     if (!isAuthenticated) return;
 
     socket.connect();
@@ -26,16 +28,28 @@ const RootLayout = () => {
         ),
       );
     };
-    socket.on("connect", () => console.log("socket connected:", socket.id));
-    socket.on("connect_error", (err) =>
-      console.log("socket connect error:", err.message),
-    );
 
+    const handleNewChatMessage = (payload) => {
+      const isCurrentlyOpen = chatId === payload.chatId;
+
+      dispatch(
+        baseApi.util.updateQueryData("getChatList", undefined, (draft) => {
+          const chat = draft.find((c) => c._id === payload.chatId);
+          if (chat) {
+            chat.lastMessage = payload.lastMessage;
+            chat.lastMessageAt = payload.lastMessageAt;
+            chat.isUnread = isCurrentlyOpen ? false : payload.isUnread;
+          }
+        }),
+      );
+    };
     socket.on("connectionRequestReceived", handleConnectionRequest);
+    socket.on("newChatMessage", handleNewChatMessage);
 
     return () => {
-      socket.disconnect();
       socket.off("connectionRequestReceived", handleConnectionRequest);
+      socket.off("newChatMessage", handleNewChatMessage);
+      socket.disconnect();
     };
   }, [isAuthenticated]);
 
