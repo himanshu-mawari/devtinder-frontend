@@ -11,7 +11,7 @@ const DeveloperCard = ({ user }) => {
     firstName,
     lastName,
     profilePicture,
-    role,
+    title,
     location,
     skills,
     tags,
@@ -39,10 +39,10 @@ const DeveloperCard = ({ user }) => {
           <img
             src={profilePicture}
             placeholder="Profile picture"
-            className="w-20 h-20 rounded-full object-cover object-top hidden md:block  "
+            className="w-20 h-20 rounded-full object-cover object-top hidden sm:block  "
           />
         ) : (
-          <span className="hidden bg-logo w-20 h-20 rounded-full justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl sidebar:flex shrink-0">
+          <span className="hidden bg-logo w-20 h-20 rounded-full justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl sm:flex shrink-0">
             {getProfileInitials(name.toUpperCase())}
           </span>
         )}
@@ -71,9 +71,9 @@ const DeveloperCard = ({ user }) => {
             {location && <span>{location}</span>}
           </div>
 
-          {role && (
+          {title && (
             <p className="text-sm md:text-base font-medium text-muted-foreground mt-1">
-              {role}
+              {title}
             </p>
           )}
         </div>
@@ -104,21 +104,23 @@ const DeveloperCard = ({ user }) => {
           ""
         )}
 
-        <div className="pt-1 ">
-          <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
-            Interests
-          </h3>
-          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-            {tags.map((line) => (
-              <div
-                key={line}
-                className="inline-flex items-center justify-center text-xs md:text-sm text-foreground rounded-full border border-transparent bg-secondary px-3 py-1 md:px-4 md:py-1.5 gap-2"
-              >
-                {line}
-              </div>
-            ))}
+        {tags?.length  > 0 && (
+          <div className="pt-1 ">
+            <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
+              Interests
+            </h3>
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+              {tags.map((line) => (
+                <div
+                  key={line}
+                  className="inline-flex items-center justify-center text-xs md:text-sm text-foreground rounded-full border border-transparent bg-secondary px-3 py-1 md:px-4 md:py-1.5 gap-2"
+                >
+                  {line}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           {githubUsername || portfolioUrl ? (
