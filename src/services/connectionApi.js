@@ -7,7 +7,6 @@ export const connectionApi = baseApi.injectEndpoints({
         url: `request/send/${status}/${id}`,
         method: "POST",
       }),
-      invalidatesTags: ["Feed"],
     }),
     getConnections: builder.query({
       query: () => ({
