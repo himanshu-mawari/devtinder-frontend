@@ -167,7 +167,7 @@ const ProfileScreen = () => {
 
             <div className="space-y-4">
               <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-muted">
-                Skills {tags?.length > 0 ? "& Interests" : ""}
+                {skills?.length > 0 ? "Skills" : ""} {tags?.length > 0 ? "& Interests" : ""}
               </h3>
 
               {skills?.length > 0 && (
