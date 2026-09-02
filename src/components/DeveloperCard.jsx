@@ -4,6 +4,8 @@ import { getProfileInitials, getGithubUrl } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import { useSendRequestMutation } from "../services/connectionApi";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { baseApi } from "../services/baseApi";
 
 const DeveloperCard = ({ user }) => {
   const {
@@ -22,14 +24,29 @@ const DeveloperCard = ({ user }) => {
   } = user;
   const name = firstName + " " + lastName;
   const [sendRequest] = useSendRequestMutation();
+  const dispatch = useDispatch();
 
-  const handleSendRequest = async (status, id) => {
+  const handleSendRequest = async (status, user) => {
+    const { _id: id } = user;
+    const data = { status, id };
+
+    dispatch(
+      baseApi.util.updateQueryData("feed", undefined, (draftFeed) => {
+        const index = draftFeed.findIndex((feed) => feed._id === id);
+        if (index !== -1) draftFeed.splice(index, 1);
+      }),
+    );
     try {
-      const data = { status, id };
-
-      await sendRequest(data);
+      await sendRequest(data).unwrap();
     } catch (err) {
-       toast.error(err?.data?.message || "Couldn't send request. Please try again.")
+      dispatch(
+        baseApi.util.updateQueryData("feed", undefined, (draftFeed) => {
+          draftFeed.unshift(user);
+        }),
+      );
+      toast.error(
+        err?.data?.message || "Couldn't send request. Please try again.",
+      );
     }
   };
 
@@ -105,7 +122,7 @@ const DeveloperCard = ({ user }) => {
           ""
         )}
 
-        {tags?.length  > 0 && (
+        {tags?.length > 0 && (
           <div className="pt-1 ">
             <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
               Interests
@@ -161,7 +178,7 @@ const DeveloperCard = ({ user }) => {
           <button
             type="button"
             className="flex flex-1 md:flex-initial md:w-64 items-center justify-center gap-2 rounded-xl bg-background px-4 py-2.5 md:py-3 text-sm md:text-base font-semibold text-foreground transition-transform duration-100 ease-out cursor-pointer select-none active:scale-95 border border-input hover:bg-accent hover:text-accent-foreground xl:max-w-52 "
-            onClick={() => handleSendRequest("ignored", _id)}
+            onClick={() => handleSendRequest("ignored", user)}
           >
             <X className="w-4 h-4 md:w-5 md:h-5" />
             <span>Pass</span>
@@ -170,7 +187,7 @@ const DeveloperCard = ({ user }) => {
           <button
             type="button"
             className="flex flex-1 md:flex-initial md:w-64 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 md:py-3 text-sm md:text-base font-semibold text-primary-foreground hover:opacity-90 transition-transform duration-100 ease-out cursor-pointer select-none active:scale-95 shadow-sm  xl:max-w-52 "
-            onClick={() => handleSendRequest("interested", _id)}
+            onClick={() => handleSendRequest("interested", user)}
           >
             <Check className="w-4 h-4 md:w-5 md:h-5" />
             <span>Connect</span>
