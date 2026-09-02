@@ -1,13 +1,33 @@
 import DeveloperCard from "../components/DeveloperCard";
-import { useFeedQuery } from "../services/feedApi";
+import { useEffect } from "react";
+import { useFeedInfiniteQuery } from "../services/feedApi";
 import DeveloperCardSkeleton from "../components/DeveloperCardSkeleton";
 import DiscoverEmptyState from "../components/DiscoverEmptyState";
 import ErrorState from "../components/ErrorState";
 import useErrorHandler from "../hooks/useErrorHandler";
 
 const Discover = () => {
-  const { data: users, isLoading, isError, error , isFetching , refetch } = useFeedQuery();
-  const {message , showRetry} =  useErrorHandler(error , "developers")
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useFeedInfiniteQuery();
+
+  const users = data?.pages.flatMap((page) => page?.data) ?? [];
+
+  const { message, showRetry } = useErrorHandler(error, "developers");
+
+  useEffect(() => {
+    if (!isFetchingNextPage && hasNextPage && users.length <= 3) {
+      fetchNextPage();
+    }
+  }, [users.length]);
   return (
     <div className="w-full">
       <div className="flex flex-col ">
@@ -24,8 +44,13 @@ const Discover = () => {
         {isLoading ? (
           <DeveloperCardSkeleton />
         ) : isError ? (
-          <ErrorState message={message} onRetry={refetch} showRetry={showRetry} isRetrying={isFetching}/>
-        ) : users.length ? (
+          <ErrorState
+            message={message}
+            onRetry={refetch}
+            showRetry={showRetry}
+            isRetrying={isFetching}
+          />
+        ) : users?.length ? (
           <>
             {users.map((user, index) => (
               <div key={user._id} className={index === 0 ? "block" : "hidden"}>
