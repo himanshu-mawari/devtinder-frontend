@@ -10,7 +10,6 @@ export const baseApi = createApi({
 
   tagTypes: [
     "User",
-    "Feed",
     "Connection",
     "Request",
     "Message",
