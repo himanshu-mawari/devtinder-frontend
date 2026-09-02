@@ -17,7 +17,7 @@ const DesktopSidebar = ({ collapsed }) => {
 
   return (
     <div
-      className={`flex flex-col h-full  bg-sidebar border-r transition-all duration-300 ${
+      className={`flex flex-col h-full  bg-sidebar border-r border-border transition-all duration-300 ${
         collapsed ? "w-16  p-2 items-center" : "w-64 p-4"
       }`}
     >
