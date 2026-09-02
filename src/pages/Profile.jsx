@@ -62,7 +62,7 @@ const ProfileScreen = () => {
                   className="h-20 w-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full object-cover object-top ring-2 ring-border"
                 />
               ) : (
-                <span className="bg-logo w-20 h-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full flex justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl  shrink-0">
+                <span className="bg-logo w-20 h-20 md:w-24 md:h-24 xl:w-20 xl:h-20 rounded-full flex justify-center items-center font-heading font-semibold tracking-tight text-primary-foreground text-xl lg:text-2xl  shrink-0">
                   {getProfileInitials(name.toUpperCase())}
                 </span>
               )}
