@@ -9,7 +9,6 @@ import { baseApi } from "../services/baseApi";
 
 const DeveloperCard = ({ user }) => {
   const {
-    _id,
     username,
     firstName,
     lastName,
@@ -32,8 +31,13 @@ const DeveloperCard = ({ user }) => {
 
     dispatch(
       baseApi.util.updateQueryData("feed", undefined, (draftFeed) => {
-        const index = draftFeed.findIndex((feed) => feed._id === id);
-        if (index !== -1) draftFeed.splice(index, 1);
+        for (const page of draftFeed.pages) {
+          const index = page?.data.findIndex((u) => u._id === id);
+          if (index !== -1) {
+            page?.data.splice(index, 1);
+            break;
+          }
+        }
       }),
     );
     try {
@@ -41,7 +45,7 @@ const DeveloperCard = ({ user }) => {
     } catch (err) {
       dispatch(
         baseApi.util.updateQueryData("feed", undefined, (draftFeed) => {
-          draftFeed.unshift(user);
+          draftFeed?.pages[0]?.data.unshift(user);
         }),
       );
       toast.error(
