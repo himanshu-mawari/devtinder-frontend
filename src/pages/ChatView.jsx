@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GoArrowLeft } from "react-icons/go";
 import { LuSendHorizontal } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket";
 import { useGetUserDetailQuery } from "../services/userApi";
-import { useGetChatMessagesQuery } from "../services/chatApi";
+import { useGetChatMessagesInfiniteQuery } from "../services/chatApi";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import ChatViewSkeleton from "../components/ChatViewSkeleton";
@@ -23,6 +23,7 @@ const ChatView = () => {
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState([]);
   const hasSeeded = useRef(false);
+  const scrollContainerRef = useRef(null);
 
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -36,13 +37,23 @@ const ChatView = () => {
     },
   );
   const {
-    data: messageHistory,
+    data,
     isLoading: messageLoading,
     isError,
     error,
     isFetching,
     refetch,
-  } = useGetChatMessagesQuery(chatId, { skip: !chatId });
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetChatMessagesInfiniteQuery(chatId, { skip: !chatId });
+
+  const messageHistory = useMemo(
+    () =>
+      [...(data?.pages ?? [])].reverse().flatMap((page) => page.messages) ?? [],
+    [data],
+  );
+
   const { message, showRetry } = useErrorHandler(error, "conversation");
   const [markChatAsRead] = useMarkChatAsReadMutation();
 
@@ -90,10 +101,19 @@ const ChatView = () => {
     };
   }, [targetUserId]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    if (messageHistory) {
-      setMessages(messageHistory);
+    setMessages(messageHistory);
+
+    if (!hasSeeded.current && messageHistory.length > 0) {
+      requestAnimationFrame(() => {
+        const container = scrollContainerRef.current;
+
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      });
+
       hasSeeded.current = true;
     }
   }, [messageHistory]);
@@ -102,7 +122,7 @@ const ChatView = () => {
     return () => {
       dispatch(setActiveChatId(null));
     };
-  },[]);
+  }, []);
 
   const sendMessage = (overrideText) => {
     const textToSend =
@@ -125,6 +145,16 @@ const ChatView = () => {
 
   const { username, profilePicture, firstName, lastName } = userDetail || "";
   const name = firstName + " " + lastName;
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+ 
+    if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   return isLoading || messageLoading ? (
     <ChatViewSkeleton />
@@ -163,7 +193,11 @@ const ChatView = () => {
         </div>
       </header>
 
-      <section className="flex-1 overflow-y-auto min-h-0 py-4 md:py-6 px-4 2xl:px-7">
+      <section
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto min-h-0 py-4 md:py-6 px-4 2xl:px-7"
+      >
         {!messageHistory?.length ? (
           <EmptyChatMessage recipient={userDetail} sendMessage={sendMessage} />
         ) : (
