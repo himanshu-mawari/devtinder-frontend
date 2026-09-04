@@ -6,23 +6,34 @@ export const chatApi = baseApi.injectEndpoints({
       query: () => ({
         url: "chats",
       }),
-      transformResponse: (response) => response?.chatList
+      transformResponse: (response) => response?.chatList,
     }),
-    getChatMessages : builder.query({
-      query: (chatId) => ({
-        url: `chats/${chatId}/messages`
-      }),
-      transformResponse: (response) => response?.messages,
-      providesTags: (result , error , {chatId}) => [{type: "Message" , id:chatId}]
+
+    getChatMessages: builder.infiniteQuery({
+      infiniteQueryOptions: {
+        initialPageParam: undefined,
+        getNextPageParam: (lastPage, allPages, lastPageParam) => {
+          if (!lastPage?.hasMore) return undefined;
+          return lastPage?.messages[0]?._id;
+        },
+      },
+
+      query({ queryArg, pageParam }) {
+        return `chats/${queryArg}/messages${pageParam ? `?before=${pageParam}&limit=20` : ""}`;
+      },
     }),
-    markChatAsRead : builder.mutation({
+
+    markChatAsRead: builder.mutation({
       query: (chatId) => ({
         url: `chats/${chatId}/read`,
-        method: "PATCH"
-      })
-    })
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
-
-export const { useGetChatListQuery , useGetChatMessagesQuery , useMarkChatAsReadMutation} = chatApi;
+export const {
+  useGetChatListQuery,
+  useGetChatMessagesInfiniteQuery,
+  useMarkChatAsReadMutation,
+} = chatApi;
