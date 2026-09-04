@@ -11,7 +11,6 @@ const RootLayout = () => {
   const chatId = useSelector((state) => state.chat.activeChatId);
 
   useEffect(() => {
-    console.log("hey world");
     if (!isAuthenticated) return;
 
     socket.connect();

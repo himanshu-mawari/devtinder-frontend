@@ -27,8 +27,6 @@ const ChatList = () => {
 
   const loggedInUserId = userData?._id;
 
-  console.log(conversations);
-
   return isLoading || profileLoading ? (
     <ChatListSkeleton />
   ) : isError ? (
@@ -105,9 +103,7 @@ const ChatList = () => {
                     <div className="flex-1 min-w-0">
                       <p
                         className={`text-sm truncate text-text ${
-                          isUnread
-                            ? "font-semibold "
-                            : "font-medium "
+                          isUnread ? "font-semibold " : "font-medium "
                         }`}
                       >
                         {name}
@@ -116,9 +112,7 @@ const ChatList = () => {
                       <div className="flex items-center text-sm truncate mt-0.5">
                         <p
                           className={`truncate pr-1 text-text ${
-                            isUnread
-                              ? "font-semibold "
-                              : "font-normal "
+                            isUnread ? "font-semibold " : "font-normal "
                           }`}
                         >
                           {chat.lastMessage

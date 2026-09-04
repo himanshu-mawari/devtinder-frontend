@@ -30,7 +30,6 @@ const ProfileScreen = () => {
   const { message, showRetry } = useErrorHandler(error, "Profile");
 
   const isLong = bio?.length > 90;
-  console.log(profilePicture);
   return (
     <div className="relative mx-auto flex h-dvh  flex-col overflow-hidden bg-background text-text">
       <main className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] mb-20 lg:mb-0">
@@ -167,7 +166,8 @@ const ProfileScreen = () => {
 
             <div className="space-y-4">
               <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-muted">
-                {skills?.length > 0 ? "Skills" : ""} {tags?.length > 0 ? "& Interests" : ""}
+                {skills?.length > 0 ? "Skills" : ""}{" "}
+                {tags?.length > 0 ? "& Interests" : ""}
               </h3>
 
               {skills?.length > 0 && (
