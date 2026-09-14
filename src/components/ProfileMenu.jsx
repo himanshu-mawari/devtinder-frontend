@@ -4,12 +4,13 @@ import { useGetProfileQuery } from "../services/userApi";
 import { useLogoutMutation } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useTheme } from "../contexts/ThemeContext";
 
 const ProfileMenu = ({ toggleProfileMenu }) => {
   const { data: user } = useGetProfileQuery();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
-
+  const {toggleTheme} = useTheme();
   const { firstName, lastName, profilePicture, username } = user;
   const name = firstName + " " + lastName;
 
@@ -59,7 +60,10 @@ const ProfileMenu = ({ toggleProfileMenu }) => {
       </div>
 
       <div className="pt-2 flex flex-col gap-1 text-sm font-medium">
-        <button className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
+        <button
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          onClick={toggleTheme}
+        >
           <Moon className="h-4 w-4" />
           <span>Theme</span>
         </button>
