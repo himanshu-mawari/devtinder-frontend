@@ -6,6 +6,7 @@ export default {
         background: "var(--color-background)",
         sidebar: "var(--color-sidebar)",
         card: "var(--color-card)",
+        skeleton: "var(--color-skeleton)",
 
         primary: "var(--color-primary)",
         "primary-foreground": "var(--color-primary-foreground)",
@@ -55,6 +56,15 @@ export default {
 
       screens: {
         sidebar: "900px",
+      },
+
+      keyframes: {
+        shimmer: {
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

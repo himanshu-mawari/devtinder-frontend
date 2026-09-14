@@ -47,56 +47,46 @@
   --border: #2b314a;
   --shadow-logo: 0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
   --color-pill: #1B2238;
+  --color-skeleton: #20273e;
+
+
 }
 
 
 :root.light {
-  /* Page */
   --color-background: #f8fafc;
 
-  /* Sidebar — slightly different from page */
   --color-sidebar: #f1f5f9;
 
-  /* Cards / elevated surfaces */
   --color-card: #ffffff;
 
-  /* Hover */
   --color-surface-hover: #e8edf5;
 
-  /* Primary */
   --color-primary: #5367f4;
   --color-primary-foreground: #ffffff;
 
-  /* Secondary */
   --color-secondary: #f1f5f9;
   --color-secondary-foreground: #334155;
 
-  /* Accent */
   --color-accent: #f1f5f9;
   --color-accent-foreground: #334155;
 
-  /* Logo */
   --gradient-logo: linear-gradient(135deg,
       oklch(58% .21 272),
       oklch(68% .16 320));
 
-  /* Text */
   --color-text: #0f172a;
   --color-text-muted: #64748b;
   --muted-foreground: #475569;
 
-  /* Input */
   --color-input: #f1f5f9;
 
-  /* Borders */
   --sidebar-border: #e2e8f0;
   --border: #e2e8f0;
   --sidebar-accent: #e2e8f0;
 
-  /* Sidebar items (Hover state) */
   --sidebar-accent-hover: #cbd5e1;
 
-  /* Focus rings */
   --color-ring: #5367f4;
 
   --color-popover: #ffffff;
@@ -107,6 +97,9 @@
   --shadow-logo: 0 10px 20px -6px oklch(58% 0.21 272 / 0.18);
 
   --color-pill: #f0f3ff;
+
+  --color-skeleton: #e2e8f0;
+  
 }
 
 @layer base {
