@@ -1,72 +1,80 @@
-# 🚀 DevTinder – Frontend
+# DevTinder — Frontend
 
-Frontend for **DevTinder**, a developer networking platform designed to help developers connect and build meaningful professional relationships.
+A React client for DevTinder, a developer-matching platform with real-time chat and connection requests.
 
+## Features
 
----
+* Secure authentication and protected routes
+* Developer discovery feed with seamless automatic pagination
+* Real-time connection request updates and unread-message indicators
+* Live one-to-one chat with infinite-scroll message history using cursor-based pagination
+* Optimistic UI updates with automatic rollback on failure
+* Responsive layouts across mobile and desktop
 
-## 💡 Why DevTinder?
+## Tech Stack
 
-- DevTinder helps developers find and connect with peers efficiently.
-- It provides a platform to share profiles, send connection requests, and discover other developers in a simple, modern interface  
+* React
+* Redux Toolkit / RTK Query
+* Socket.IO Client
+* React Router
+* Tailwind CSS
+* Vite
 
-## 🛠️ Tech Stack
+## Architecture
 
-- **React.js** – JavaScript library for building user interfaces  
-- **Redux Toolkit** – State management solution for predictable global state  
-- **React Router DOM** – Client-side routing  
-- **Axios** – HTTP client for API communication  
-- **Tailwind CSS** – Utility-first CSS framework for styling  
-- **Vite** – Fast build tool and development server  
-
----
-## 📌 Features
-
-- 🔐 Authentication (Login / Logout)
-- 👤 Edit Profile
-- 🧑‍💻 Developer Feed
-- 🤝 Send / Accept Connection Requests
-- 📩 View Connections
-- ⚡ Global state management using Redux
-
----
-
-## ⚙️ Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/devtinder-frontend.git
+```text
+React UI → RTK Query → Backend API → Database
 ```
 
-Navigate to the project directory:
+Real-time communication operates independently of the request/response cycle:
+
+```text
+React ↔ Socket.IO Client ↔ Socket.IO Server
+```
+
+Feature and chat data is organized through feature-scoped `injectEndpoints` under `services/`, sharing a single `baseApi`. Socket events update RTK Query cache directly with `updateQueryData`, avoiding unnecessary refetches.
+
+## Real-Time Communication
+
+* Authenticated sockets join a personal room (`user:<id>`) for real-time connection request events and unread-message updates.
+* The active conversation uses a screen-scoped room for live message delivery.
+* RTK Query `infiniteQuery` handles page-based feed pagination and cursor-based chat history pagination.
+
+## Getting Started
+
+### Prerequisites
+
+* Node.js
+* npm
+
+### Installation
 
 ```bash
+git clone https://github.com/himanshu-mawari/devtinder-frontend.git
 cd devtinder-frontend
-```
-
-Install dependencies:
-
-```bash
 npm install
 ```
 
-Run the development server:
+### Environment Variables
+
+Create a `.env` file:
+
+```env
+VITE_API_URL=http://localhost:2007
+```
+
+### Running Locally
 
 ```bash
 npm run dev
 ```
 
----
+### Build
 
-## 🔗 Backend Repository
-Backend source code:
-👉🏻 https://github.com/himanshu-mawari/devTinder
+```bash
+npm run build
+```
 
----
+## Related Repository
 
-
-## 🎯 Project Vision
-
-DevTinder is a Frontend application built with scalability, performance, and maintainability in mind.  
-It demonstrates clean architecture, robust state management, and modern UI/UX practices suitable for real-world usage.
+Backend: [DevTinder — Backend](https://github.com/himanshu-mawari/Devtinder)
