@@ -150,7 +150,7 @@ const DeveloperCard = ({ user }) => {
               <h3 className="text-[11px] md:text-xs uppercase font-semibold tracking-wide text-muted-foreground mb-2">
                 Links
               </h3>
-              <div className="flex items-center ml-1 gap-6 text-sm md:text-base text-text font-medium">
+              <div className="flex flex-wrap items-center ml-1 gap-6 text-sm md:text-base text-text font-medium">
                 {githubUsername && (
                   <Link
                     className="flex items-center gap-1.5 transition-colors hover:underline"
@@ -168,7 +168,7 @@ const DeveloperCard = ({ user }) => {
                     target="_blank"
                   >
                     <Globe className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-                    <span>{portfolioUrl}</span>
+                    <span className="">{portfolioUrl}</span>
                   </Link>
                 )}
               </div>

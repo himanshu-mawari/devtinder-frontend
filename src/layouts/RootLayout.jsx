@@ -42,12 +42,24 @@ const RootLayout = () => {
         }),
       );
     };
+
+    const handleConnectionRequestAccepted = (payload) => {
+      dispatch(
+        baseApi.util.updateQueryData("getConnections", undefined, (draft) => {
+          if (!draft.some((r) => r._id === payload._id)) {
+            draft.push(payload);
+          }
+        }),
+      );
+    };
     socket.on("connectionRequestReceived", handleConnectionRequest);
     socket.on("newChatMessage", handleNewChatMessage);
+    socket.on("connectionRequestAccepted", handleConnectionRequestAccepted);
 
     return () => {
       socket.off("connectionRequestReceived", handleConnectionRequest);
       socket.off("newChatMessage", handleNewChatMessage);
+      socket.off("connectionRequestAccepted", handleConnectionRequestAccepted);
       socket.disconnect();
     };
   }, [isAuthenticated]);

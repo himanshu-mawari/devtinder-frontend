@@ -1,6 +1,6 @@
 import { Compass, Users, MessageSquare, User } from "lucide-react";
 
-export const BASE_URL = "http://localhost:2007/";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const NAV_ITEMS = [
   { id: 1, path: "/discover", label: "Discover", icon: Compass },
