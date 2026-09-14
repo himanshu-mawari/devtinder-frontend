@@ -81,9 +81,7 @@ const DeveloperCard = ({ user }) => {
           </span>
         )}
         <div className="flex-1 min-w-0 mb-3 md:mb-4">
-          <h2 className="text-lg md:text-2xl font-bold text-text">
-            {name}
-          </h2>
+          <h2 className="text-lg md:text-2xl font-bold text-text">{name}</h2>
 
           <div className="flex items-center flex-wrap gap-x-1.5 text-sm md:text-base text-muted-foreground mt-0.5">
             {username && <span>@{username}</span>}
