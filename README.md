@@ -60,7 +60,7 @@ npm install
 Create a `.env` file:
 
 ```env
-VITE_API_URL=http://localhost:2007
+VITE_API_BASE_URL=http://localhost:2007
 ```
 
 ### Running Locally
@@ -78,3 +78,8 @@ npm run build
 ## Related Repository
 
 Backend: [DevTinder — Backend](https://github.com/himanshu-mawari/Devtinder)
+
+## Deployment
+
+Live demo: https://devtinder-himanshu.vercel.app
+>**Note:** The first load may take 30–60s after a period of inactivity.
